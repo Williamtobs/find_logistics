@@ -1,11 +1,11 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/onboarding/driver_onboard.dart';
+import 'package:find_logistic/src/screens/onboarding/user_onboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class UserOnboard extends StatelessWidget {
-  const UserOnboard({Key? key}) : super(key: key);
+class DriverOnboard extends StatelessWidget {
+  const DriverOnboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class UserOnboard extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const DriverOnboard()));
+              MaterialPageRoute(builder: (context) => const UserOnboard()));
         },
         backgroundColor: primaryColor,
         child: const Icon(
@@ -28,11 +28,8 @@ class UserOnboard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/delivery.png',
-              height: 280,
-            ),
-            const SizedBox(
-              height: 20,
+              'assets/images/delivery-bike.png',
+              height: 300,
             ),
             Text('Find Logistic',
                 style: GoogleFonts.inter(
@@ -40,7 +37,7 @@ class UserOnboard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 )),
-            const SizedBox(height: 50),
+            const SizedBox(height: 60),
             AppButton(text: 'Create Account', color: primaryColor),
             const SizedBox(height: 20),
             AppButton(
