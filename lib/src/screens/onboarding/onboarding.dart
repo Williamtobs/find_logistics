@@ -94,9 +94,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    _pageController.nextPage(
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.ease);
+                    _index == 2
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const UserOnboard()))
+                        : _pageController.nextPage(
+                            duration: const Duration(milliseconds: 800),
+                            curve: Curves.ease);
                   },
                   child: Text('NEXT',
                       style: GoogleFonts.poppins(
