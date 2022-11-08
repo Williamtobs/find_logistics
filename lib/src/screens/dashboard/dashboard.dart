@@ -13,8 +13,8 @@ class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
 
   final List pages = [
-    Container(
-      color: Colors.red,
+    Center(
+      child: Text('Home'),
     ),
     Container(
       color: Colors.green,
@@ -27,11 +27,13 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: secondaryColor,
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: secondaryColor,
+        selectedItemColor: primaryColor,
         onTap: (value) {
           setState(() {
             _currentIndex = value;
