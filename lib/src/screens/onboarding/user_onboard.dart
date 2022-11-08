@@ -1,4 +1,6 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/auth/login/login.dart';
+import 'package:find_logistic/src/screens/auth/register/signup.dart';
 import 'package:find_logistic/src/screens/onboarding/driver_onboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -42,10 +44,27 @@ class UserOnboard extends StatelessWidget {
                   color: Colors.white,
                 )),
             const SizedBox(height: 50),
-            AppButton(text: 'Create Account', color: primaryColor),
+            AppButton(
+              text: 'Create Account',
+              color: primaryColor,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignUpScreen()));
+              },
+            ),
             const SizedBox(height: 20),
             AppButton(
-                text: 'Login', color: Colors.white, textColor: primaryColor),
+              text: 'Login',
+              color: Colors.white,
+              textColor: primaryColor,
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return const LoginScreen();
+                })));
+              },
+            ),
           ],
         ),
       ),
