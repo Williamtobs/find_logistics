@@ -4,6 +4,7 @@ import 'package:find_logistic/src/screens/auth/register/signup.dart';
 import 'package:find_logistic/src/screens/onboarding/driver_onboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserOnboard extends StatelessWidget {
@@ -29,14 +30,14 @@ class UserOnboard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/delivery.png',
-              height: 280,
+            SvgPicture.asset(
+              'assets/images/onboard_img2.svg',
+              height: 300,
             ),
             const SizedBox(
               height: 20,
             ),
-            Text('Find Logistic',
+            Text('User Onboard',
                 style: GoogleFonts.inter(
                   fontSize: 26,
                   fontWeight: FontWeight.w700,

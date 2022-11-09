@@ -1,5 +1,6 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/auth/register/signup.dart';
+import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,16 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    AppButton(text: 'Login', color: primaryColor),
+                    AppButton(
+                      text: 'Login',
+                      color: primaryColor,
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Dashboard()));
+                      },
+                    ),
                   ],
                 ),
               ),
