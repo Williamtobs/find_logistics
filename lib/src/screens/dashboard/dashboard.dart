@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/tabs/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -13,9 +14,7 @@ class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
 
   final List pages = [
-    Center(
-      child: Text('Home'),
-    ),
+    const HomeScreen(),
     Container(
       color: Colors.green,
     ),
@@ -32,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        backgroundColor: secondaryColor,
+        backgroundColor: whiteColor,
         selectedItemColor: primaryColor,
         onTap: (value) {
           setState(() {
