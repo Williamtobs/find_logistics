@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/tabs/history/history.dart';
 import 'package:find_logistic/src/screens/tabs/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,9 +16,7 @@ class _DashboardState extends State<Dashboard> {
 
   final List pages = [
     const HomeScreen(),
-    Container(
-      color: Colors.green,
-    ),
+    const History(),
     Container(
       color: Colors.blue,
     ),

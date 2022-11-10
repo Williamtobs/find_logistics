@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,13 +19,22 @@ class HomeScreen extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Icon(
-                  Icons.menu,
-                  size: 30,
+              children: [
+                InkWell(
+                  onTap: () {
+                    //Drawer
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SideDrawer()));
+                  },
+                  child: const Icon(
+                    Icons.menu,
+                    size: 30,
+                  ),
                 ),
                 //menu
-                Icon(
+                const Icon(
                   Icons.account_circle_outlined,
                   size: 30,
                 ),
