@@ -1,4 +1,7 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/profile/profile_sreecn.dart';
+import 'package:find_logistic/src/screens/tabs/history/history.dart';
+import 'package:find_logistic/src/screens/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -38,7 +41,7 @@ class SideDrawer extends StatelessWidget {
                   height: 70,
                   width: 70,
                   decoration: BoxDecoration(
-                      color: secondaryColor, shape: BoxShape.circle),
+                      color: primaryColor, shape: BoxShape.circle),
                   child: Center(
                     child: Text(
                       'D',
@@ -68,16 +71,45 @@ class SideDrawer extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const EachTile(
-              icon: Icons.person,
-              title: 'Profile',
+            GestureDetector(
+              onTap: (() {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const UserProfile()));
+              }),
+              child: const EachTile(
+                icon: Icons.person,
+                title: 'Profile',
+              ),
             ),
             const SizedBox(
               height: 5,
             ),
-            const EachTile(
-              icon: Icons.wallet,
-              title: 'Wallet',
+            GestureDetector(
+              onTap: (() {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return const WalletScreen();
+                })));
+              }),
+              child: const EachTile(
+                icon: Icons.wallet,
+                title: 'Wallet',
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            GestureDetector(
+              onTap: (() {
+                Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return const History();
+                })));
+              }),
+              child: const EachTile(
+                icon: Icons.history,
+                title: 'Order History',
+              ),
             ),
             const SizedBox(
               height: 5,
@@ -100,8 +132,7 @@ class SideDrawer extends StatelessWidget {
               height: 60,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: Text(
                   'Logout',
