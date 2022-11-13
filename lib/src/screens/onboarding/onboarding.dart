@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/onboarding/mode_selection.dart';
 import 'package:find_logistic/src/screens/onboarding/user_onboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -84,7 +85,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserOnboard()));
+                            builder: (context) => const UserSelectMode()));
                   },
                   child: Text('SKIP',
                       style: GoogleFonts.poppins(
@@ -98,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const UserOnboard()))
+                                builder: (context) => const UserSelectMode()))
                         : _pageController.nextPage(
                             duration: const Duration(milliseconds: 800),
                             curve: Curves.ease);

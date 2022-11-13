@@ -4,13 +4,15 @@ class AppTextField extends StatelessWidget {
   final String? hintText;
   final bool? isVisible;
   final TextEditingController? controller;
+  final Color? color;
   final TextInputType? keyboardType;
   const AppTextField(
       {super.key,
       this.hintText,
       this.controller,
       this.isVisible,
-      this.keyboardType});
+      this.keyboardType,
+      this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class AppTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
+        border: color != null ? Border.all(color: color!) : null,
       ),
       child: Center(
         child: TextFormField(
@@ -32,14 +35,8 @@ class AppTextField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 20),
             hintText: hintText,
             hintStyle: const TextStyle(color: Colors.black),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white),
-            ),
+
+            border: InputBorder.none,
           ),
         ),
       ),

@@ -14,17 +14,17 @@ class UserOnboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: secondaryColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const DriverOnboard()));
-        },
-        backgroundColor: primaryColor,
-        child: const Icon(
-          Icons.account_circle_outlined,
-          size: 40,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.pushReplacement(context,
+      //         MaterialPageRoute(builder: (context) => const DriverOnboard()));
+      //   },
+      //   backgroundColor: primaryColor,
+      //   child: const Icon(
+      //     Icons.account_circle_outlined,
+      //     size: 40,
+      //   ),
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(

@@ -1,5 +1,4 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/onboarding/user_onboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,17 +11,17 @@ class DriverOnboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: secondaryColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const UserOnboard()));
-        },
-        backgroundColor: primaryColor,
-        child: const Icon(
-          Icons.account_circle_outlined,
-          size: 40,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.pushReplacement(context,
+      //         MaterialPageRoute(builder: (context) => const UserOnboard()));
+      //   },
+      //   backgroundColor: primaryColor,
+      //   child: const Icon(
+      //     Icons.account_circle_outlined,
+      //     size: 40,
+      //   ),
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
