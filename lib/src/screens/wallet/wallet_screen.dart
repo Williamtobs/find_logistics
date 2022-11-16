@@ -1,11 +1,24 @@
+import 'dart:io';
+
+import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/wallet/deposit_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../tabs/history/history.dart';
-
-class WalletScreen extends StatelessWidget {
+class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
+
+  @override
+  State<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,20 +80,28 @@ class WalletScreen extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                Container(
-                  width: 100,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text('Fund Wallet',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: primaryColor,
-                        )),
+                InkWell(
+                  onTap: (() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DepositScreen()));
+                  }),
+                  child: Container(
+                    width: 100,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text('Fund Wallet',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: primaryColor,
+                          )),
+                    ),
                   ),
                 )
               ],
