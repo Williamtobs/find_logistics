@@ -5,7 +5,6 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pay_with_paystack/pay_with_paystack.dart';
@@ -19,12 +18,12 @@ class DepositScreen extends ConsumerStatefulWidget {
 
 class _DepositScreenState extends ConsumerState<DepositScreen> {
   final TextEditingController _amountController = TextEditingController();
-  final plugin = PaystackPlugin();
+  // final plugin = PaystackPlugin();
 
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: paystackPubKey);
+    //plugin.initialize(publicKey: paystackPubKey);
   }
 
   accessCode() {
