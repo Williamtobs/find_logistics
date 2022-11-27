@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/wallet/deposit_screen.dart';
 import 'package:flutter/material.dart';

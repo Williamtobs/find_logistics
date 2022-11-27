@@ -1,16 +1,24 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/auth/register/signup.dart';
+import 'package:find_logistic/src/screens/auth/customer/register/signup.dart';
 import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends ConsumerWidget {
+  LoginScreen({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(loginProvider);
+    final model = ref.read(loginProvider.notifier);
+
     return Scaffold(
         backgroundColor: secondaryColor,
         body: Padding(
@@ -62,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     AppTextField(
                       hintText: 'Email Address',
-                      controller: TextEditingController(),
+                      controller: _emailController,
                     ),
                     const SizedBox(
                       height: 20,
@@ -78,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     AppTextField(
                       hintText: 'Password',
-                      controller: TextEditingController(),
+                      controller: _passwordController,
                     ),
                     const SizedBox(
                       height: 20,
@@ -111,11 +119,16 @@ class LoginScreen extends StatelessWidget {
                     AppButton(
                       text: 'Login',
                       color: primaryColor,
+                      isLoading: state.isLoading,
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Dashboard()));
+                        model.login(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            context: context);
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const Dashboard()));
                       },
                     ),
                   ],
