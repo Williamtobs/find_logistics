@@ -64,11 +64,12 @@ class NetworkImpl implements Network {
     final response = await _dio.post(
       fullUrl,
       data: formData,
-      // options: Options(
-      //   headers: {
-      //     "Accept": "application/json",
-      //   },
-      // ),
+      options: Options(
+        validateStatus: (_) => true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      ),
     );
     return response;
   }
@@ -95,7 +96,7 @@ class NetworkImpl implements Network {
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
-            "Accept": "application/json"
+            "Content-Type": "application/json"
           },
         ),
       );

@@ -22,7 +22,7 @@ class VerifyEmail extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Verify Email',
+              Text('Verify Email Address',
                   style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -32,8 +32,8 @@ class VerifyEmail extends ConsumerWidget {
                 height: 20,
               ),
               Text(
-                  'We have sent a verification link to your email address. '
-                  'Enter the code below to verify your email address.',
+                  'Please enter the verification code sent to '
+                  '${state.user.email} via email to verify your account',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 16,
@@ -48,14 +48,33 @@ class VerifyEmail extends ConsumerWidget {
                 controller: _verificationContr,
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
-              Text('Didn\'t receive the email?, Resend',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Didn\'t receive the email?',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      )),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      model.resendOtp(context: context);
+                    },
+                    child: Text('Resend',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        )),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 40,
               ),

@@ -23,7 +23,7 @@ class AppButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: double.infinity,
-        height: 60,
+        height: 55,
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(10),

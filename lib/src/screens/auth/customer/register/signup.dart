@@ -34,8 +34,33 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     return Scaffold(
       backgroundColor: secondaryColor,
+      appBar: AppBar(
+        backgroundColor: secondaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Register',
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
         child: Column(
           children: [
             Expanded(
@@ -43,36 +68,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'Register',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container()
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
                     Text('First Name',
                         style: GoogleFonts.inter(
                           fontSize: 16,
@@ -140,6 +135,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               onSelect: (Country country) {
                                 setState(() {
                                   _countryCode = country.phoneCode;
+                                  print(_countryCode);
                                 });
                               },
                             );
@@ -215,12 +211,18 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     AppButton(
                         text: 'Register',
                         color: primaryColor,
+                        isLoading: state.isLoading,
                         onPressed: () {
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => VerifyEmail()));
                           model.register(context: context, formData: {
                             'first_name': _firstNameController.text,
                             'last_name': _lastNameController.text,
                             'email': _emailController.text,
-                            'phone_number': _phoneController.text,
+                            'phone_number':
+                                '$_countryCode${_phoneController.text}',
                             "user_type": "customer",
                             'password': _passwordController.text,
                             'password_confirmation':
@@ -260,6 +262,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),

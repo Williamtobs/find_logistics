@@ -1,6 +1,6 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup.dart';
-import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -87,6 +87,7 @@ class LoginScreen extends ConsumerWidget {
                     AppTextField(
                       hintText: 'Password',
                       controller: _passwordController,
+                      isVisible: true,
                     ),
                     const SizedBox(
                       height: 20,
@@ -100,15 +101,24 @@ class LoginScreen extends ConsumerWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             )),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              color: primaryColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
                           ),
                         )
                       ],
