@@ -1,11 +1,37 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:find_logistic/src/app/constant/app_string.dart';
+import 'package:find_logistic/src/app/service/network/network.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:http/http.dart' as http;
 
 class WalletViewModel extends StateNotifier<WalletState> {
-  WalletViewModel() : super(WalletState());
+  WalletViewModel(this.network) : super(WalletState());
+
+  final Network network;
+
+  initiateTransaction({required BuildContext context, var formData}) async {
+    try {
+      final response = await network.postWithToken(
+          formData: formData, path: 'update/profile');
+      var body = response.data;
+      if (response.statusCode == 200) {
+        BottomSnack.successSnackBar(message: body['message'], context: context);
+        
+      } else {
+        BottomSnack.errorSnackBar(message: body['message'], context: context);
+      }
+    } catch (e) {
+      print(e);
+      state = state.copyWith(isLoading: false);
+      BottomSnack.errorSnackBar(
+          message: 'Something went wrong, please try again later',
+          context: context);
+    }
+  }
 
   Future<String> createAccessCode(
     getReference,
@@ -42,7 +68,7 @@ class WalletViewModel extends StateNotifier<WalletState> {
       final Map body = json.decode(response.body);
       if (body['data']['status'] == 'success') {
         //do something with the response. show success}
-        
+
       } else {
         //show error prompt}
       }

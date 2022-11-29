@@ -21,7 +21,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(dashboardProvider);
-
+    final state = ref.watch(profileProvider);
+    final model = ref.read(profileProvider.notifier);
     _firstNameController.text = user.user.firstName!;
     _lastNameController.text = user.user.lastName!;
     _emailController.text = user.user.email!;
@@ -102,6 +103,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     AppTextField(
                         hintText: 'Email Address',
                         controller: _emailController,
+                        enabled: false,
                         color: Colors.black),
                     const SizedBox(
                       height: 20,
@@ -129,7 +131,17 @@ class _UserProfileState extends ConsumerState<UserProfile> {
             AppButton(
               text: 'Update',
               color: primaryColor,
-              onPressed: () {},
+              isLoading: state.isLoading,
+              onPressed: () {
+                model.updateProfile(
+                  context: context,
+                  formData: {
+                    'first_name': _firstNameController.text,
+                    'last_name': _lastNameController.text,
+                    'phone_number': _phoneController.text,
+                  },
+                );
+              },
             ),
             const SizedBox(
               height: 20,

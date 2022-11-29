@@ -5,6 +5,7 @@ import 'package:find_logistic/src/screens/auth/customer/login/login_viewmodel.da
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
 import 'package:find_logistic/src/screens/dashboard/dashboard_viewmodel.dart';
+import 'package:find_logistic/src/screens/profile/profile_viewmodel.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen_viewmodel.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -16,7 +17,9 @@ final networkProvider = Provider<Network>((ref) {
 //App Provider
 final walletProvider =
     StateNotifierProvider<WalletViewModel, WalletState>((ref) {
-  return WalletViewModel();
+  return WalletViewModel(
+    ref.read(networkProvider),
+  );
 });
 
 final loginProvider = StateNotifierProvider<LoginViewModel, LoginState>((ref) {
@@ -36,4 +39,9 @@ final forgotPasswordProvider =
 final dashboardProvider =
     StateNotifierProvider<DashboardViewModel, DashboardState>((ref) {
   return DashboardViewModel(ref.read(networkProvider));
+});
+
+final profileProvider =
+    StateNotifierProvider<ProfileViewModel, ProfileState>((ref) {
+  return ProfileViewModel(ref.read(networkProvider), ref);
 });
