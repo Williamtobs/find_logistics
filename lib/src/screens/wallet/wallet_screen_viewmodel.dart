@@ -29,7 +29,7 @@ class WalletViewModel extends StateNotifier<WalletState> {
     return accessCode;
   }
 
-  void _verifyOnServer(String reference) async {
+  void verifyOnServer(String reference) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ class WalletViewModel extends StateNotifier<WalletState> {
       final Map body = json.decode(response.body);
       if (body['data']['status'] == 'success') {
         //do something with the response. show success}
-
+        
       } else {
         //show error prompt}
       }

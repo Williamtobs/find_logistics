@@ -5,9 +5,9 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
 
 class DepositScreen extends ConsumerStatefulWidget {
   const DepositScreen({super.key});
@@ -18,39 +18,58 @@ class DepositScreen extends ConsumerStatefulWidget {
 
 class _DepositScreenState extends ConsumerState<DepositScreen> {
   final TextEditingController _amountController = TextEditingController();
-  final plugin = PaystackPlugin();
+  // final plugin = PaystackPlugin();
 
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: paystackPubKey);
-    print('done');
+    //plugin.initialize(publicKey: paystackPubKey);
   }
 
   accessCode() {
     return ref.read(walletProvider.notifier).createAccessCode(_getReference(),
-        int.parse(_amountController.text), "akeemtobi6@gmail.com");
+        int.parse('${_amountController.text}00'), "akeemtobi6@gmail.com");
   }
 
   _payWithCard() async {
-    String accessCode = await ref
-        .read(walletProvider.notifier)
-        .createAccessCode(_getReference(), int.parse(_amountController.text),
-            "akeemtobi6@gmail.com");
-    Charge charge = Charge()
-      ..amount = int.parse(_amountController.text)
-      ..reference = _getReference()
-      ..accessCode = accessCode
-      ..email = "akeemtobi6@gmail.com";
-    CheckoutResponse response = await plugin.checkout(context,
-        method: CheckoutMethod.selectable, charge: charge);
+    // String accessCode = await ref
+    //     .read(walletProvider.notifier)
+    //     .createAccessCode(_getReference(), int.parse(_amountController.text),
+    //         "akeemtobi6@gmail.com");
+    PayWithPayStack().now(
+        context: context,
+        secretKey: paystackPubKey,
+        customerEmail: "akeemtobi6@gmail.com",
+        reference: _getReference(),
+        currency: 'NGN',
+        amount: '${_amountController.text}00',
+        paymentChannel: ["card", "bank"],
+        metaData: {
+          "custom_fields": [
+            {"name": "Akeem William Tobi", "phone": "+2330267268224"}
+          ]
+        },
+        transactionCompleted: () {
+          print("Transaction Successful");
+          //ref.read(walletProvider.notifier).verifyOnServer(_getReference());
+        },
+        transactionNotCompleted: () {
+          print("Transaction Not Successful!");
+        });
+    // Charge charge = Charge()
+    //   ..amount = int.parse('${_amountController.text}00')
+    //   ..reference = _getReference()
+    //   ..accessCode = accessCode
+    //   ..email = "akeemtobi6@gmail.com";
+    // CheckoutResponse response = await plugin.checkout(context,
+    //     method: CheckoutMethod.selectable, charge: charge);
 
-    if (response.status == true) {
-      // verify on server if transaction is successful
-      //_verifyOnServer(response.reference);
-    } else {
-      print('failed');
-    }
+    // if (response.status == true) {
+    //   // verify on server if transaction is successful
+    //   //_verifyOnServer(response.reference);
+    // } else {
+    //   print('failed');
+    // }
   }
 
   String _getReference() {

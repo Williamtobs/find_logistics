@@ -6,13 +6,15 @@ class AppButton extends StatelessWidget {
   final String text;
   final Color color;
   final Color? textColor;
+  final bool? isLoading;
   final void Function()? onPressed;
   const AppButton(
       {Key? key,
       required this.text,
       this.onPressed,
       required this.color,
-      this.textColor})
+      this.textColor,
+      this.isLoading})
       : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class AppButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: double.infinity,
-        height: 60,
+        height: 55,
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(10),
@@ -29,13 +31,15 @@ class AppButton extends StatelessWidget {
               color: primaryColor,
             )),
         child: Center(
-          child: Text(
-            text,
-            style: GoogleFonts.inter(
-                color: textColor ?? Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
-          ),
+          child: isLoading == true
+              ? const CircularProgressIndicator()
+              : Text(
+                  text,
+                  style: GoogleFonts.inter(
+                      color: textColor ?? Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
         ),
       ),
     );

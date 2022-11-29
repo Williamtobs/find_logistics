@@ -2,14 +2,19 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/profile/profile_sreecn.dart';
 import 'package:find_logistic/src/screens/tabs/history/history.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SideDrawer extends StatelessWidget {
+class SideDrawer extends ConsumerWidget {
   const SideDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(dashboardProvider);
+    final logout = ref.read(dashboardProvider.notifier);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -44,7 +49,7 @@ class SideDrawer extends StatelessWidget {
                       color: primaryColor, shape: BoxShape.circle),
                   child: Center(
                     child: Text(
-                      'D',
+                      state.user.firstName!.substring(0, 1),
                       style: GoogleFonts.inter(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,
@@ -53,12 +58,13 @@ class SideDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
+                //.substring(0,5)
                 const SizedBox(
                   width: 10,
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(
-                    'John Doe',
+                    '${state.user.firstName} ${state.user.lastName}',
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -128,18 +134,24 @@ class SideDrawer extends StatelessWidget {
             const SizedBox(
               height: 70,
             ),
-            Container(
-              height: 60,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(5)),
-              child: Center(
-                child: Text(
-                  'Logout',
-                  style: GoogleFonts.inter(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+            InkWell(
+              onTap: () {
+                logout.logOut(context: context);
+              },
+              child: Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                  child: Text(
+                    'Logout',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

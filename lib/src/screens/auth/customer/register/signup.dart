@@ -1,27 +1,66 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/auth/login/login.dart';
+import 'package:find_logistic/src/screens/auth/customer/login/login.dart';
+import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   String _countryCode = '234';
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(registerProvider);
+    final model = ref.read(registerProvider.notifier);
+
     return Scaffold(
       backgroundColor: secondaryColor,
+      appBar: AppBar(
+        backgroundColor: secondaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Register',
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
         child: Column(
           children: [
             Expanded(
@@ -29,36 +68,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'Register',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container()
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
                     Text('First Name',
                         style: GoogleFonts.inter(
                           fontSize: 16,
@@ -70,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextField(
                       hintText: 'First Name',
-                      controller: TextEditingController(),
+                      controller: _firstNameController,
                     ),
                     const SizedBox(
                       height: 10,
@@ -86,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextField(
                       hintText: 'Last Name',
-                      controller: TextEditingController(),
+                      controller: _lastNameController,
                     ),
                     const SizedBox(
                       height: 10,
@@ -102,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextField(
                       hintText: 'Email Address',
-                      controller: TextEditingController(),
+                      controller: _emailController,
                     ),
                     const SizedBox(
                       height: 10,
@@ -126,6 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               onSelect: (Country country) {
                                 setState(() {
                                   _countryCode = country.phoneCode;
+                                  print(_countryCode);
                                 });
                               },
                             );
@@ -156,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: AppTextField(
                             hintText: 'Phone Number',
                             keyboardType: TextInputType.number,
-                            controller: TextEditingController(),
+                            controller: _phoneController,
                           ),
                         ),
                       ],
@@ -175,7 +185,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextField(
                       hintText: 'Password',
-                      controller: TextEditingController(),
+                      controller: _passwordController,
+                      isVisible: true,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text('Confirm Password',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        )),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    AppTextField(
+                      hintText: 'Confirm Password',
+                      controller: _confirmPasswordController,
                       isVisible: true,
                     ),
                     const SizedBox(
@@ -184,7 +211,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppButton(
                         text: 'Register',
                         color: primaryColor,
-                        onPressed: () {}),
+                        isLoading: state.isLoading,
+                        onPressed: () {
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => VerifyEmail()));
+                          model.register(context: context, formData: {
+                            'first_name': _firstNameController.text,
+                            'last_name': _lastNameController.text,
+                            'email': _emailController.text,
+                            'phone_number':
+                                '$_countryCode${_phoneController.text}',
+                            "user_type": "customer",
+                            'password': _passwordController.text,
+                            'password_confirmation':
+                                _confirmPasswordController.text,
+                          });
+                        }),
                   ],
                 ),
               ),
@@ -205,10 +249,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
                   },
                   child: Text(
                     'Login',
@@ -220,6 +262,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),

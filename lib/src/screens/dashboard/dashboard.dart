@@ -1,18 +1,26 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/tabs/history/history.dart';
 import 'package:find_logistic/src/screens/tabs/home/home.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  ConsumerState<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends ConsumerState<Dashboard> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(dashboardProvider.notifier).getProfile(context: context);
+  }
 
   final List pages = [
     const HomeScreen(),
@@ -24,6 +32,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final model = ref.read(dashboardProvider.notifier);
+
+    model.getProfile(context: context);
+
     return Scaffold(
       backgroundColor: secondaryColor,
       body: pages[_currentIndex],

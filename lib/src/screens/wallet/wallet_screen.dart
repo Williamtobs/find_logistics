@@ -1,10 +1,6 @@
-import 'dart:io';
-
-import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/wallet/deposit_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WalletScreen extends StatefulWidget {
