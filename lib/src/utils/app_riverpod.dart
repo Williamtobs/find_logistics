@@ -4,6 +4,7 @@ import 'package:find_logistic/src/app/service/network/network_impl.dart';
 import 'package:find_logistic/src/screens/auth/customer/login/login_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
+import 'package:find_logistic/src/screens/dashboard/dashboard_viewmodel.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen_viewmodel.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -30,4 +31,9 @@ final registerProvider =
 final forgotPasswordProvider =
     StateNotifierProvider<ForgotPasswordViewModel, ForgotPasswordState>((ref) {
   return ForgotPasswordViewModel(ref.read(networkProvider));
+});
+
+final dashboardProvider =
+    StateNotifierProvider<DashboardViewModel, DashboardState>((ref) {
+  return DashboardViewModel(ref.read(networkProvider));
 });

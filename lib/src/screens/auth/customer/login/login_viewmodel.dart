@@ -30,8 +30,10 @@ class LoginViewModel extends StateNotifier<LoginState> {
             user: AppUser.fromJson(body['data']['user']),
           );
           if (!mounted) return;
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Dashboard()));
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const Dashboard()),
+              (route) => false);
         }
       } else {
         state = state.copyWith(isLoading: false);

@@ -1,14 +1,31 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends ConsumerStatefulWidget {
   const UserProfile({super.key});
 
   @override
+  ConsumerState<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends ConsumerState<UserProfile> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
+    final user = ref.watch(dashboardProvider);
+
+    _firstNameController.text = user.user.firstName!;
+    _lastNameController.text = user.user.lastName!;
+    _emailController.text = user.user.email!;
+    _phoneController.text = user.user.phoneNumber!;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -51,7 +68,7 @@ class UserProfile extends StatelessWidget {
                     ),
                     AppTextField(
                       hintText: 'First Name',
-                      controller: TextEditingController(),
+                      controller: _firstNameController,
                       color: Colors.black,
                     ),
                     const SizedBox(
@@ -68,7 +85,7 @@ class UserProfile extends StatelessWidget {
                     ),
                     AppTextField(
                         hintText: 'Last Name',
-                        controller: TextEditingController(),
+                        controller: _lastNameController,
                         color: Colors.black),
                     const SizedBox(
                       height: 20,
@@ -84,7 +101,7 @@ class UserProfile extends StatelessWidget {
                     ),
                     AppTextField(
                         hintText: 'Email Address',
-                        controller: TextEditingController(),
+                        controller: _emailController,
                         color: Colors.black),
                     const SizedBox(
                       height: 20,
@@ -100,7 +117,7 @@ class UserProfile extends StatelessWidget {
                     ),
                     AppTextField(
                         hintText: 'Phone Number',
-                        controller: TextEditingController(),
+                        controller: _phoneController,
                         color: Colors.black),
                   ],
                 ),
@@ -110,7 +127,7 @@ class UserProfile extends StatelessWidget {
               height: 20,
             ),
             AppButton(
-              text: 'Save',
+              text: 'Update',
               color: primaryColor,
               onPressed: () {},
             ),
