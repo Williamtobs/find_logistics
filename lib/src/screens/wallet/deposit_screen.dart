@@ -52,7 +52,7 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
         },
         transactionCompleted: () {
           print("Transaction Successful");
-          initiateTransaction(context: context, status: 2);
+          initiateTransaction(context: context, status: 1);
           //ref.read(walletProvider.notifier).verifyOnServer(_getReference());
         },
         transactionNotCompleted: () {
@@ -209,7 +209,7 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
               isLoading: _isLoading,
               onPressed: () {
                 if (_amountController.text.isNotEmpty) {
-                  initiateTransaction(context: context, status: 1);
+                  initiateTransaction(context: context, status: 2);
                 }
               },
             ),
