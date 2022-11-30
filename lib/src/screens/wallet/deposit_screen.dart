@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,18 +19,18 @@ class DepositScreen extends ConsumerStatefulWidget {
 
 class _DepositScreenState extends ConsumerState<DepositScreen> {
   final TextEditingController _amountController = TextEditingController();
+  bool _isLoading = false;
   // final plugin = PaystackPlugin();
 
   @override
   void initState() {
     super.initState();
-    //plugin.initialize(publicKey: paystackPubKey);
   }
 
-  accessCode() {
-    return ref.read(walletProvider.notifier).createAccessCode(_getReference(),
-        int.parse('${_amountController.text}00'), "akeemtobi6@gmail.com");
-  }
+  // accessCode() {
+  //   return ref.read(walletProvider.notifier).createAccessCode(_getReference(),
+  //       int.parse('${_amountController.text}00'), "akeemtobi6@gmail.com");
+  // }
 
   _payWithCard() async {
     // String accessCode = await ref
@@ -39,7 +40,7 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
     PayWithPayStack().now(
         context: context,
         secretKey: paystackPubKey,
-        customerEmail: "akeemtobi6@gmail.com",
+        customerEmail: "tobs@gmail.co",
         reference: _getReference(),
         currency: 'NGN',
         amount: '${_amountController.text}00',
@@ -51,25 +52,53 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
         },
         transactionCompleted: () {
           print("Transaction Successful");
+          initiateTransaction(context: context, status: 1);
           //ref.read(walletProvider.notifier).verifyOnServer(_getReference());
         },
         transactionNotCompleted: () {
           print("Transaction Not Successful!");
+          initiateTransaction(context: context, status: 0);
         });
-    // Charge charge = Charge()
-    //   ..amount = int.parse('${_amountController.text}00')
-    //   ..reference = _getReference()
-    //   ..accessCode = accessCode
-    //   ..email = "akeemtobi6@gmail.com";
-    // CheckoutResponse response = await plugin.checkout(context,
-    //     method: CheckoutMethod.selectable, charge: charge);
+  }
 
-    // if (response.status == true) {
-    //   // verify on server if transaction is successful
-    //   //_verifyOnServer(response.reference);
-    // } else {
-    //   print('failed');
-    // }
+  initiateTransaction(
+      {required BuildContext context, required int status}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var formData = {
+      "amount": _amountController.text,
+      "reference": _getReference(),
+      'email': "tobs@gmail.co",
+      'status': status
+    };
+    try {
+      final response = await ref
+          .read(networkProvider)
+          .postWithToken(formData: formData, path: 'initiate/topup');
+      var body = response.data;
+      print(body);
+      if (response.statusCode == 200) {
+        BottomSnack.successSnackBar(message: body['message'], context: context);
+        _payWithCard();
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        BottomSnack.errorSnackBar(message: body['message'], context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        _isLoading = false;
+      });
+      BottomSnack.errorSnackBar(
+          message: 'Something went wrong, please try again later',
+          context: context);
+    }
   }
 
   String _getReference() {
@@ -177,9 +206,10 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
             AppButton(
               text: 'Deposit',
               color: primaryColor,
+              isLoading: _isLoading,
               onPressed: () {
                 if (_amountController.text.isNotEmpty) {
-                  _payWithCard();
+                  initiateTransaction(context: context, status: 2);
                 }
               },
             ),
