@@ -66,10 +66,11 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
     setState(() {
       _isLoading = true;
     });
+    String email = ref.read(dashboardProvider).user.email!;
     var formData = {
       "amount": _amountController.text,
       "reference": _getReference(),
-      'email': "tobs@gmail.co",
+      'email': email,
       'status': status
     };
     try {
