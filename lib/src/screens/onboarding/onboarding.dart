@@ -22,7 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: Column(
         children: [
           const SizedBox(
-            height: 20,
+            height: 40,
           ),
           Align(
             alignment: Alignment.topRight,
@@ -33,11 +33,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     MaterialPageRoute(
                         builder: (context) => const UserSelectMode()));
               },
-              child: Text('SKIP',
-                  style: GoogleFonts.poppins(
-                      color: primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('SKIP',
+                    style: GoogleFonts.poppins(
+                        color: primaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500)),
+              ),
             ),
           ),
           Expanded(
@@ -52,22 +55,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
                 children: [
                   EachSlide(
-                    description:
-                        'The Quickest and Easy way to hire a dispatch rider',
-                    title: 'Quick and Easy',
+                    description: 'From anywhere, regardless of your location',
+                    title: 'Find riders near you',
                     image: 'assets/images/slide1.svg',
                     index: _index,
                   ),
                   EachSlide(
-                    description: 'Deliver now or schedule a delivery for later',
-                    title: 'Easy Delivery',
+                    description:
+                        'Negotiate at a reasonable rate to pick a rider.',
+                    title: 'Negotiate your price',
                     image: 'assets/images/slide2.svg',
                     index: _index,
                   ),
                   EachSlide(
                     description:
-                        'The Quickest and Easy way to hire a dispatch rider',
-                    title: 'Quick and Easy',
+                        'Agree on a fee and a dispatcher would be on its way.',
+                    title: 'Order a dispatcher',
                     image: 'assets/images/slide3.svg',
                     index: _index,
                   ),
@@ -92,48 +95,72 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(
             height: 30,
           ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
+          Center(
+            child: InkWell(
+              onTap: () {
+                _index == 2
+                    ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserSelectMode()));
-                  },
-                  child: Text('SKIP',
-                      style: GoogleFonts.poppins(
-                          color: primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500)),
-                ),
-                InkWell(
-                  onTap: () {
-                    _index == 2
-                        ? Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UserSelectMode()))
-                        : _pageController.nextPage(
-                            duration: const Duration(milliseconds: 800),
-                            curve: Curves.ease);
-                  },
-                  child: Text('NEXT',
-                      style: GoogleFonts.poppins(
-                          color: primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500)),
-                ),
-              ],
+                            builder: (context) => const UserSelectMode()))
+                    : _pageController.nextPage(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.ease);
+              },
+              child: SvgPicture.asset(
+                  _index == 0
+                      ? 'assets/images/next1.svg'
+                      : _index == 1
+                          ? 'assets/images/next2.svg'
+                          : 'assets/images/next3.svg',
+                  height: 60,
+                  width: 60),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 20,
+          //     vertical: 10,
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       // InkWell(
+          //       //   onTap: () {
+          //       //     Navigator.push(
+          //       //         context,
+          //       //         MaterialPageRoute(
+          //       //             builder: (context) => const UserSelectMode()));
+          //       //   },
+          //       //   child: Text('SKIP',
+          //       //       style: GoogleFonts.poppins(
+          //       //           color: primaryColor,
+          //       //           fontSize: 16,
+          //       //           fontWeight: FontWeight.w500)),
+          //       // ),
+          //       InkWell(
+          //         onTap: () {
+          //           _index == 2
+          //               ? Navigator.push(
+          //                   context,
+          //                   MaterialPageRoute(
+          //                       builder: (context) => const UserSelectMode()))
+          //               : _pageController.nextPage(
+          //                   duration: const Duration(milliseconds: 800),
+          //                   curve: Curves.ease);
+          //         },
+          //         child: Text('NEXT',
+          //             style: GoogleFonts.poppins(
+          //                 color: primaryColor,
+          //                 fontSize: 16,
+          //                 fontWeight: FontWeight.w500)),
+          //       ),
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );
@@ -157,7 +184,19 @@ class EachSlide extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 30),
-        SvgPicture.asset(image, height: 300),
+        // Container(
+        //   decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //       image: Asset(image),
+        //       fit: BoxFit.cover,
+        //     ),
+        //   ),
+        // ),
+        SvgPicture.asset(
+          image,
+          height: 300,
+          width: MediaQuery.of(context).size.width,
+        ),
         const SizedBox(height: 40),
         AnimatedSmoothIndicator(
           activeIndex: index,
@@ -170,11 +209,13 @@ class EachSlide extends StatelessWidget {
             dotColor: secondaryColor,
           ),
         ),
+        const SizedBox(height: 50),
         Text(
           title,
           style: GoogleFonts.inter(
             fontSize: 24,
             fontWeight: FontWeight.w700,
+            color: primaryColor,
           ),
         ),
         const SizedBox(height: 10),
@@ -184,6 +225,7 @@ class EachSlide extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w400,
+            color: primaryColor,
           ),
         ),
       ],
