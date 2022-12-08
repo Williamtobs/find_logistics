@@ -1,6 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/onboarding/mode_selection.dart';
-import 'package:find_logistic/src/screens/onboarding/user_onboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';

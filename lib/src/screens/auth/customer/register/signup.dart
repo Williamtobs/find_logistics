@@ -1,22 +1,20 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/auth/customer/login/login.dart';
-import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
-import 'package:find_logistic/src/screens/widgets/app_button.dart';
-import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
+import 'package:find_logistic/src/screens/auth/riders/register/signup.dart';
+import 'package:find_logistic/src/screens/widgets/button.dart';
+import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpScreenUser extends ConsumerStatefulWidget {
+  const SignUpScreenUser({super.key});
 
   @override
-  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreenUser> createState() => _SignUpScreenUserState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+class _SignUpScreenUserState extends ConsumerState<SignUpScreenUser> {
   String _countryCode = '234';
 
   final TextEditingController _emailController = TextEditingController();
@@ -33,239 +31,159 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final model = ref.read(registerProvider.notifier);
 
     return Scaffold(
-      backgroundColor: secondaryColor,
-      appBar: AppBar(
-        backgroundColor: secondaryColor,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Register',
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            size: 30,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
+      backgroundColor: tertiaryColor,
+      body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Expanded(
+            const SizedBox(
+              height: 60,
+            ),
+            Center(
+              child: Image.asset(
+                'assets/images/find_logo.png',
+                height: 55,
+                width: 73,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.85,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: whiteColor,
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(80),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 5,
+                    offset: const Offset(10, 4),
+                  ),
+                ],
+              ),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('First Name',
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Text("Sign up as User",
                         style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
+                          color: primaryColor,
                         )),
                     const SizedBox(
-                      height: 5,
+                      height: 30,
                     ),
-                    AppTextField(
-                      hintText: 'First Name',
+                    AppInputField(
+                      hintText: "First Name",
                       controller: _firstNameController,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Text('Last Name',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    AppTextField(
-                      hintText: 'Last Name',
+                    AppInputField(
+                      hintText: "Last Name",
                       controller: _lastNameController,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Text('Email Address',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    AppTextField(
-                      hintText: 'Email Address',
+                    AppInputField(
+                      hintText: "Email Address",
                       controller: _emailController,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Text('Phone Number',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
+                    AppInputField(
+                      hintText: "Phone Number",
+                      controller: _phoneController,
+                    ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
+                    ),
+                    AppInputField(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AppInputField(
+                      hintText: "Confirm Password",
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CustomButton(
+                      text: "Sign Up",
+                      isLoading: state.isLoading,
+                      onTap: () {
+                        model.register(context: context, formData: {
+                          'first_name': _firstNameController.text,
+                          'last_name': _lastNameController.text,
+                          'email': _emailController.text,
+                          'phone_number':
+                              '$_countryCode${_phoneController.text}',
+                          "user_type": "customer",
+                          'password': _passwordController.text,
+                          'password_confirmation':
+                              _confirmPasswordController.text,
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text('Are you a rider?',
+                            style: GoogleFonts.inter(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            )),
+                        const SizedBox(
+                          width: 3,
+                        ),
                         InkWell(
                           onTap: () {
-                            showCountryPicker(
-                              context: context,
-                              showPhoneCode: true,
-                              onSelect: (Country country) {
-                                setState(() {
-                                  _countryCode = country.phoneCode;
-                                  print(_countryCode);
-                                });
-                              },
-                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RiderSignUpScreen()));
                           },
-                          child: Container(
-                            width: 60,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '+$_countryCode',
-                                style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                ),
-                              ),
+                          child: Text(
+                            'Sign up here',
+                            style: GoogleFonts.inter(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: AppTextField(
-                            hintText: 'Phone Number',
-                            keyboardType: TextInputType.number,
-                            controller: _phoneController,
-                          ),
-                        ),
+                        )
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Text('Password',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    AppTextField(
-                      hintText: 'Password',
-                      controller: _passwordController,
-                      isVisible: true,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text('Confirm Password',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    AppTextField(
-                      hintText: 'Confirm Password',
-                      controller: _confirmPasswordController,
-                      isVisible: true,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    AppButton(
-                        text: 'Register',
-                        color: primaryColor,
-                        isLoading: state.isLoading,
-                        onPressed: () {
-                          // Navigator.pushReplacement(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => VerifyEmail()));
-                          model.register(context: context, formData: {
-                            'first_name': _firstNameController.text,
-                            'last_name': _lastNameController.text,
-                            'email': _emailController.text,
-                            'phone_number':
-                                '$_countryCode${_phoneController.text}',
-                            "user_type": "customer",
-                            'password': _passwordController.text,
-                            'password_confirmation':
-                                _confirmPasswordController.text,
-                          });
-                        }),
                   ],
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Already have an account?',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
-                  },
-                  child: Text(
-                    'Login',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            )
           ],
         ),
       ),
