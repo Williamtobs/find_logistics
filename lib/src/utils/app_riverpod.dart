@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
 import 'package:find_logistic/src/app/service/network/network_impl.dart';
-import 'package:find_logistic/src/screens/auth/customer/login/login_viewmodel.dart';
+import 'package:find_logistic/src/screens/auth/login/login_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
 import 'package:find_logistic/src/screens/dashboard/dashboard_viewmodel.dart';

@@ -2,6 +2,7 @@ import 'package:find_logistic/src/app/model/user.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
 import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
+import 'package:find_logistic/src/screens/home/home.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
@@ -32,7 +33,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
           if (!mounted) return;
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const Dashboard()),
+              MaterialPageRoute(builder: (context) => const Home()),
               (route) => false);
         }
       } else {
