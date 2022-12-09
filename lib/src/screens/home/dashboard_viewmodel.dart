@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardViewModel extends StateNotifier<DashboardState> {
-  DashboardViewModel(this.network) : super(DashboardState(user: AppUser()));
+  DashboardViewModel(this.network)
+      : super(DashboardState(user: AppUser(), isLoading: true));
 
   final Network network;
 
   getProfile({required BuildContext context}) async {
+    //state = state.copyWith(isLoading: true);
     try {
       var res = await network.get(path: 'profile');
       var body = res.data;

@@ -16,79 +16,107 @@ class VerifyEmail extends ConsumerWidget {
     final state = ref.watch(registerProvider);
     final model = ref.read(registerProvider.notifier);
     return Scaffold(
-        backgroundColor: secondaryColor,
+        backgroundColor: tertiaryColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Verify Email Address',
-                  style: GoogleFonts.inter(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  )),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                  'Please enter the verification code sent to '
-                  '${state.user.email} via email to verify your account',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  )),
-              const SizedBox(
-                height: 20,
-              ),
-              AppTextField(
-                hintText: '',
-                controller: _verificationContr,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Didn\'t receive the email?',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      )),
-                  const SizedBox(
-                    width: 4,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 60,
+                ),
+                Center(
+                  child: Image.asset(
+                    'assets/images/find_logo.png',
+                    height: 55,
+                    width: 73,
                   ),
-                  InkWell(
-                    onTap: () {
-                      model.resendOtp(context: context);
-                    },
-                    child: Text('Resend',
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 190,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/map.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Verify \nEmail Address!',
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 35,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                AppTextField(
+                  hintText: '',
+                  controller: _verificationContr,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                AppButton(
+                    text: 'Verify Email',
+                    color: primaryColor,
+                    isLoading: state.isLoading,
+                    onPressed: () {
+                      model.verifyEmail(
+                        context: context,
+                        otp: _verificationContr.text,
+                      );
+                    }),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Didn\'t receive the email?',
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: primaryColor,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryColor,
                         )),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              AppButton(
-                  text: 'Verify Email',
-                  color: primaryColor,
-                  isLoading: state.isLoading,
-                  onPressed: () {
-                    model.verifyEmail(
-                      context: context,
-                      otp: _verificationContr.text,
-                    );
-                  }),
-            ],
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        model.resendOtp(context: context);
+                      },
+                      child: Text('Resend',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: primaryColor,
+                          )),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+              ],
+            ),
           ),
         ));
   }

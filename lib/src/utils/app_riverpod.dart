@@ -4,7 +4,7 @@ import 'package:find_logistic/src/app/service/network/network_impl.dart';
 import 'package:find_logistic/src/screens/auth/login/login_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
-import 'package:find_logistic/src/screens/dashboard/dashboard_viewmodel.dart';
+import 'package:find_logistic/src/screens/home/dashboard_viewmodel.dart';
 import 'package:find_logistic/src/screens/profile/profile_viewmodel.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen_viewmodel.dart';
 import 'package:riverpod/riverpod.dart';

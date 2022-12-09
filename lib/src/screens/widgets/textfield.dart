@@ -17,7 +17,7 @@ class AppInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      //height: 69,
+      height: 69,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         color: tertiaryColor,
