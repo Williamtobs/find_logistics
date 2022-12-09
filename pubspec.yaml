@@ -44,6 +44,7 @@ dependencies:
   dio: ^4.0.6
   shared_preferences: ^2.0.0-nullsafety
   animated_snack_bar: ^0.3.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

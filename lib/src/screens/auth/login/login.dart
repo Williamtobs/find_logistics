@@ -1,9 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password.dart';
-import 'package:find_logistic/src/screens/auth/customer/register/signup.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
-import 'package:find_logistic/src/screens/widgets/app_button.dart';
-import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -111,14 +107,14 @@ class LoginScreen extends ConsumerWidget {
                   text: "Sign In",
                   isLoading: state.isLoading,
                   onTap: () {
-                    // model.login(
-                    //     email: _emailController.text,
-                    //     password: _passwordController.text,
-                    //     context: context);
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Home()),
-                        (route) => false);
+                    model.login(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        context: context);
+                    // Navigator.pushAndRemoveUntil(
+                    //     context,
+                    //     MaterialPageRoute(builder: (context) => const Home()),
+                    //     (route) => false);
                   },
                 ),
                 const SizedBox(
