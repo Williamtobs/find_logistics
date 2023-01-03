@@ -224,7 +224,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
             ),
             Center(
               child: CustomButton(
-                text: 'Get Estimate',
+                text: 'Order',
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => PickUp()));

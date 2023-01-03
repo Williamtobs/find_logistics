@@ -2,8 +2,11 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../screens/fund_wallet/fund_wallet.dart';
+
 class BalanceBox extends StatelessWidget {
   final String balance;
+
   const BalanceBox({
     Key? key,
     required this.balance,
@@ -39,7 +42,15 @@ class BalanceBox extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const FundWallet()
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const FundWalletScreen()));
+                //FundWalletScreen
+              },
+              child: const FundWallet())
         ],
       ),
     );
@@ -53,7 +64,7 @@ class FundWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 112,
-      height: 22,
+      height: 28,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
