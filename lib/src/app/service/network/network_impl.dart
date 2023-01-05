@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/model/user.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
+import 'package:find_logistic/src/screens/auth/login/login.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +56,11 @@ class NetworkImpl implements Network {
   Future<void> logout({required BuildContext context}) async {
     await Future.delayed(const Duration(seconds: 3), () async {
       _deleteToken();
+      BottomSnack.successSnackBar(message: 'Log out successfully', context: context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen()));
     });
   }
 

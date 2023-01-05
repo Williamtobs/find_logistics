@@ -6,7 +6,10 @@ class CustomButton extends StatelessWidget {
   final String text;
   final void Function()? onTap;
   final bool? isLoading;
-  const CustomButton({Key? key, required this.text, this.onTap, this.isLoading})
+  final double? size;
+
+  const CustomButton(
+      {Key? key, required this.text, this.onTap, this.isLoading, this.size})
       : super(key: key);
 
   @override
@@ -15,7 +18,7 @@ class CustomButton extends StatelessWidget {
       onTap: isLoading == true ? null : onTap,
       child: Container(
         height: 47,
-        width: 206,
+        width: size ?? 206,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           gradient: LinearGradient(

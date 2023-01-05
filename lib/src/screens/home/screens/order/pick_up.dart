@@ -1,3 +1,4 @@
+import 'package:find_logistic/src/screens/map/map.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
@@ -46,7 +47,12 @@ class PickUp extends StatelessWidget {
               Center(
                 child: CustomButton(
                   text: 'Save',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MapScreen()));
+                  },
                 ),
               ),
               const SizedBox(
