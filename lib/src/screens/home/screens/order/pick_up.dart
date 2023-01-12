@@ -1,16 +1,27 @@
-import 'package:find_logistic/src/screens/map/map.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PickUp extends StatelessWidget {
-  PickUp({super.key});
+class PickUp extends ConsumerWidget {
+  final String deliveryAddress, deliveryNumber;
+  PickUp({
+    super.key,
+    required this.deliveryAddress,
+    required this.deliveryNumber,
+  });
 
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _pickUpAddress = TextEditingController();
+  final TextEditingController _pickUpNumber = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(pickUpProvider.notifier);
+    final state = ref.watch(pickUpProvider);
+
     return BaseScreen(
       title: 'Pickup',
       child: Padding(
@@ -26,12 +37,12 @@ class PickUp extends StatelessWidget {
               const SizedBox(height: 10),
               AppInputField(
                 hintText: "Pickup Phone Number",
-                controller: _controller,
+                controller: _pickUpNumber,
               ),
               const SizedBox(height: 10),
               AppInputField(
                 hintText: "Pickup Address",
-                controller: _controller,
+                controller: _pickUpAddress,
               ),
               const SizedBox(height: 10),
               AppInputField(
@@ -47,11 +58,13 @@ class PickUp extends StatelessWidget {
               Center(
                 child: CustomButton(
                   text: 'Save',
+                  isLoading: state.isLoading,
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MapScreen()));
+                    model.getLonglang(
+                      context: context,
+                      address: deliveryAddress,
+                      addressTo: _pickUpAddress.text,
+                    );
                   },
                 ),
               ),

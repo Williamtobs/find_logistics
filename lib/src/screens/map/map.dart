@@ -1,23 +1,114 @@
+import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
 import 'package:find_logistic/src/screens/map/select_rider.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends ConsumerStatefulWidget {
   final bool driverPicked;
-  const MapScreen({super.key, this.driverPicked = false});
+  final String? address, addressTo;
+  const MapScreen(
+      {super.key, this.driverPicked = false, this.address, this.addressTo});
+
+  @override
+  ConsumerState<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends ConsumerState<MapScreen> {
+  GoogleMapController? mapController; //contrller for Google map
+  // PolylinePoints polylinePoints = PolylinePoints();
+
+  // Map<PolylineId, Polyline> polylines = {};
+
+  // getDirections() async {
+  //   List<LatLng> polylineCoordinates = [];
+  //   final map = ref.watch(pickUpProvider);
+  //   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+  //     mapApiKey,
+  //     PointLatLng(double.parse(map.lat), double.parse(map.long)),
+  //     PointLatLng(double.parse(map.latTo), double.parse(map.longTo)),
+  //     travelMode: TravelMode.driving,
+  //   );
+  //   if (result.points.isNotEmpty) {
+  //     for (var point in result.points) {
+  //       polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  //     }
+  //   } else {
+  //     print(result.errorMessage);
+  //   }
+  //   addPolyLine(polylineCoordinates);
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(pickUpProvider.notifier).getDirections();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final map = ref.watch(pickUpProvider);
+
+    final LatLng kMapCenter =
+        LatLng(double.parse(map.lat), double.parse(map.long));
+
+    final LatLng kMapCenter2 =
+        LatLng(double.parse(map.latTo), double.parse(map.longTo));
+
+    final CameraPosition kInitialPosition =
+        CameraPosition(target: kMapCenter, zoom: 14.0, tilt: 0, bearing: 0);
+
+    final Set<Marker> markers = {
+      Marker(
+        markerId: MarkerId(widget.address!),
+        position: kMapCenter, //position of marker
+        infoWindow: const InfoWindow(
+          title: 'Pickup Location',
+          snippet: 'My Custom Subtitle',
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+      ),
+      Marker(
+        markerId: MarkerId(widget.addressTo!),
+        position: kMapCenter2,
+        infoWindow: const InfoWindow(
+          title: 'Delivery Location',
+          snippet: 'My Custom Subtitle',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      )
+    };
+    //getDirections();
+
     return Scaffold(
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 122, 116, 116)),
+            child: GoogleMap(
+              initialCameraPosition: kInitialPosition,
+              mapType: MapType.terrain,
+              trafficEnabled: true,
+              markers: markers,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              polylines: Set<Polyline>.of(
+                  ref.watch(pickUpProvider.notifier).polylines.values),
+              zoomGesturesEnabled: true,
+              onMapCreated: (GoogleMapController controller) {
+                setState(() {
+                  mapController = controller;
+                });
+              },
+            ),
           ),
           Column(
             children: [
@@ -83,7 +174,7 @@ class MapScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              driverPicked
+              widget.driverPicked
                   ? const SeledtedDriver()
                   : Container(
                       width: MediaQuery.of(context).size.width,
@@ -97,10 +188,9 @@ class MapScreen extends StatelessWidget {
                             topLeft: Radius.circular(22),
                             topRight: Radius.circular(22),
                           )),
-                      child: const SelectedLocation(
-                        addressFrom: 'Mamre Plain Apartments, lekki, Lagos',
-                        addressTo:
-                            'Miskay supermarket, off Blvd St,  Lekki, Lagos',
+                      child: SelectedLocation(
+                        addressFrom: widget.address!,
+                        addressTo: widget.addressTo!,
                       ),
                     )
             ],

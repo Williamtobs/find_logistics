@@ -1,9 +1,11 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/home/screens/order/pick_up.dart';
+
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/inapptextfield.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,9 +22,13 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
 
   String dispatchDay = '';
   String paymentMethod = '';
+  final TextEditingController _deliveryAddress = TextEditingController();
+  final TextEditingController _phoneNumber = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final model = ref.read(pickUpProvider.notifier);
+    final state = ref.watch(pickUpProvider);
     return BaseScreen(
       title: 'Order a dispatcher',
       child: Padding(
@@ -37,9 +43,10 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               controller: _controller,
             ),
             const SizedBox(height: 15),
-            const InAppInputField(
+            InAppInputField(
               title: 'Delivery Point 1',
               hintText: 'Enter delivery details',
+              controller: _deliveryAddress,
               // controller: _controller,
             ),
             const SizedBox(height: 15),
@@ -52,7 +59,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
             const SizedBox(height: 15),
             AppInputField(
               hintText: "Phone Number",
-              controller: _controller,
+              controller: _phoneNumber,
             ),
             const SizedBox(
               height: 20,
@@ -225,9 +232,19 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
             Center(
               child: CustomButton(
                 text: 'Order',
+                isLoading: state.isLoading,
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PickUp()));
+                  if (_deliveryAddress.text.isNotEmpty &&
+                      _phoneNumber.text.isNotEmpty) {
+                    model.getDeliveryLatLong(
+                      context: context,
+                      address: _deliveryAddress.text,
+                      phone: _phoneNumber.text,
+                    );
+                  } else {
+                    BottomSnack.errorSnackBar(
+                        message: 'Enter requires field', context: context);
+                  }
                 },
               ),
             ),

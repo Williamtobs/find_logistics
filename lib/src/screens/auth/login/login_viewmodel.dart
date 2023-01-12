@@ -56,7 +56,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
     state = state.copyWith(isLoading: true);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final response = await network.post(formData: formData, path: 'login');
+      final response = await network.post(formData: formData, path: 'signin');
       var body = response.data;
       print(body);
       if (response.statusCode == 200) {

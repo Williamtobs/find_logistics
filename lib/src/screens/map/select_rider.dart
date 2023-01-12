@@ -231,7 +231,7 @@ class EachDriver extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MapScreen(
+                              builder: (context) => MapScreen(
                                     driverPicked: true,
                                   )));
                     },
