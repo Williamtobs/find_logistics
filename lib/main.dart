@@ -1,4 +1,3 @@
-import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

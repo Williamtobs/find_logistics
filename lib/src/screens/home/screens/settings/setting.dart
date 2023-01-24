@@ -1,4 +1,6 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/home/screens/settings/screens/change_password/change_password.dart';
+import 'package:find_logistic/src/screens/home/screens/settings/screens/profile/profile_sreecn.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -34,13 +36,29 @@ class Setting extends ConsumerWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  const EachOption(
-                    icon: Icons.person_outline,
-                    title: 'Profile',
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UserProfile()));
+                    },
+                    child: const EachOption(
+                      icon: Icons.person_outline,
+                      title: 'Profile',
+                    ),
                   ),
-                  const EachOption(
-                    icon: Icons.lock_outline,
-                    title: 'Password',
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangePassword()));
+                    },
+                    child: const EachOption(
+                      icon: Icons.lock_outline,
+                      title: 'Password',
+                    ),
                   ),
                   const EachOption(
                     icon: Icons.notifications_none_outlined,
@@ -82,7 +100,9 @@ class Setting extends ConsumerWidget {
                     color: Colors.grey,
                   )),
             ),
-            const SizedBox( height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
