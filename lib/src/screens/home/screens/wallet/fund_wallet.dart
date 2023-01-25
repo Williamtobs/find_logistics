@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:find_logistic/src/app/constant/app_string.dart';
+import 'package:find_logistic/src/screens/home/screens/wallet/webview.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -177,60 +178,6 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
                             hintText: 'AMOUNT',
                             controller: _amountController,
                           ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const WalletTextField(
-                          //   hintText: 'CARD NUMBER',
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const WalletTextField(
-                          //   hintText: 'CARD HOLDER NAME',
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'MM',
-                          //       ),
-                          //     ),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'YY',
-                          //       ),
-                          //     ),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'CVV',
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Switch(
-                          //   value: isSwitched,
-                          //   onChanged: (value) {
-                          //     setState(() {
-                          //       isSwitched = value;
-                          //     });
-                          //   },
-                          //   activeTrackColor: Colors.lightGreenAccent,
-                          //   activeColor: Colors.white,
-                          // ),
                         ],
                       ),
                     )
@@ -242,11 +189,11 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
               child: CustomButton(
                 text: 'Top up',
                 onTap: () {
-                  if (_amountController.text.isNotEmpty) {
-                    initiateTransaction(context: context, status: 2);
-                  }
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => PickUp()));
+                  // if (_amountController.text.isNotEmpty) {
+                  //   initiateTransaction(context: context, status: 2);
+                  // }
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PayWebView()));
                 },
               ),
             ),

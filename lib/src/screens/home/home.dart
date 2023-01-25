@@ -1,6 +1,7 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/setting.dart';
+import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart';
 import 'package:find_logistic/src/screens/home/widgets/balance.dart';
 import 'package:find_logistic/src/screens/home/widgets/options.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -55,69 +56,96 @@ class _HomeState extends ConsumerState<Home> {
             const SizedBox(
               height: 5,
             ),
-            const BalanceBox(balance: '0.00'),
+            BalanceBox(
+                balance: (state.user.wallet!.availableBalance!).toString()),
             const SizedBox(
               height: 50,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //OrderDispatch
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const OrderDispatch()));
-                  },
-                  child: const Options(
-                    title: 'Order a Dispatch',
-                    img: 'assets/images/dispatch.png',
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(249, 255, 240, 1),
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //OrderDispatch
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const OrderDispatch()));
+                        },
+                        child: const Options(
+                          title: 'Order a Dispatch',
+                          img: 'assets/images/dispatch.png',
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const WalletScreen()));
+                        },
+                        child: const Options(
+                          title: 'Wallet',
+                          img: 'assets/images/wallet.png',
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(
-                  width: 50,
-                ),
-                const Options(
-                  title: 'Account',
-                  img: 'assets/images/account.png',
-                ),
-              ],
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Options(
+                        title: 'History',
+                        img: 'assets/images/history_home.png',
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Setting()));
+                        },
+                        child: const Options(
+                          title: 'Setting',
+                          img: 'assets/images/setting.png',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Options(
-                  title: 'History',
-                  img: 'assets/images/history_home.png',
-                ),
-                const SizedBox(
-                  width: 50,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Setting()));
-                  },
-                  child: const Options(
-                    title: 'Setting',
-                    img: 'assets/images/setting.png',
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Center(
-              child: Options(
-                title: 'Notification',
-                img: 'assets/images/notification.png',
+            Text(
+              'Recent Activities',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: primaryColor,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ],

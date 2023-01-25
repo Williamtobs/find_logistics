@@ -1,4 +1,7 @@
+import 'package:find_logistic/src/screens/auth/login/login.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
+import 'package:find_logistic/src/screens/onboarding/startup.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +37,8 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: widget.token == null ? const OnboardingScreen() : const Home(),
+      home:
+          widget.token == null ? const OnboardingScreen() : const AppStartUp(),
     );
   }
 }

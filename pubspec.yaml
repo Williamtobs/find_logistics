@@ -48,6 +48,7 @@ dependencies:
   google_maps_flutter: ^2.2.3
   location_geocoder: ^1.0.5
   flutter_polyline_points: ^1.0.0
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:

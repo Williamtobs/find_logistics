@@ -79,12 +79,8 @@ class Setting extends ConsumerWidget {
                     height: 20,
                   ),
                   const EachOption(
-                    icon: Icons.star_border_outlined,
-                    title: 'Rate & Review',
-                  ),
-                  const EachOption(
-                    icon: Icons.help_outline,
-                    title: 'Help',
+                    icon: Icons.description_outlined,
+                    title: 'Terms and Conditions',
                   ),
                 ],
               ),

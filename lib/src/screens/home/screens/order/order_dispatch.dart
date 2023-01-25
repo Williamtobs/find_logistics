@@ -56,11 +56,6 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               icon: Icons.add,
               // controller: _controller,
             ),
-            const SizedBox(height: 15),
-            AppInputField(
-              hintText: "Phone Number",
-              controller: _phoneNumber,
-            ),
             const SizedBox(
               height: 20,
             ),
@@ -69,7 +64,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: secondaryColor,
               ),
             ),
             const SizedBox(
@@ -142,7 +137,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: secondaryColor,
               ),
             ),
             const SizedBox(
@@ -212,16 +207,16 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
             ),
             Row(
               children: [
-                Icon(Icons.add, size: 24, color: primaryColor),
+                Icon(Icons.add, size: 24, color: secondaryColor),
                 const SizedBox(
                   width: 10,
                 ),
                 Text(
-                  'Add new payment method',
+                  'Add new card',
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: primaryColor,
+                    color: secondaryColor,
                   ),
                 ),
               ],
