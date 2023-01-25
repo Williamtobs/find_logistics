@@ -25,10 +25,6 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
   bool _isLoading = false;
 
   _payWithCard() async {
-    // String accessCode = await ref
-    //     .read(walletProvider.notifier)
-    //     .createAccessCode(_getReference(), int.parse(_amountController.text),
-    //         "akeemtobi6@gmail.com");
     PayWithPayStack().now(
         context: context,
         secretKey: paystackPubKey,
@@ -47,39 +43,89 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
         },
         transactionCompleted: () {
           print("Transaction Successful");
-          initiateTransaction(context: context, status: 1);
+          initiateTransaction(
+            context: context,
+          );
           //ref.read(walletProvider.notifier).verifyOnServer(_getReference());
         },
         transactionNotCompleted: () {
           print("Transaction Not Successful!");
-          initiateTransaction(context: context, status: 0);
+          initiateTransaction(
+            context: context,
+          );
         });
   }
 
-  initiateTransaction(
-      {required BuildContext context, required int status}) async {
+  // initiateTransaction(
+  //     {required BuildContext context, required int status}) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   String email = ref.read(dashboardProvider).user.email!;
+  //   var formData = {
+  //     "amount": _amountController.text,
+  //     "reference": _getReference(),
+  //     'email': email,
+  //     'status': status
+  //   };
+  //   try {
+  //     final response = await ref
+  //         .read(networkProvider)
+  //         .postWithToken(formData: formData, path: 'initiate/topup');
+  //     var body = response.data;
+  //     print(body);
+  //     if (response.statusCode == 200) {
+  //       BottomSnack.successSnackBar(message: body['message'], context: context);
+  //       _payWithCard();
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     } else {
+  //       BottomSnack.errorSnackBar(message: body['message'], context: context);
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     BottomSnack.errorSnackBar(
+  //         message: 'Something went wrong, please try again later',
+  //         context: context);
+  //   }
+  // }
+
+  initiateTransaction({required BuildContext context}) async {
     setState(() {
       _isLoading = true;
     });
     String email = ref.read(dashboardProvider).user.email!;
     var formData = {
       "amount": _amountController.text,
-      "reference": _getReference(),
       'email': email,
-      'status': status
     };
     try {
       final response = await ref
           .read(networkProvider)
-          .postWithToken(formData: formData, path: 'initiate/topup');
+          .postWithToken(formData: formData, path: 'paystack');
       var body = response.data;
-      print(body);
+      print((body['data']['reference']));
       if (response.statusCode == 200) {
-        BottomSnack.successSnackBar(message: body['message'], context: context);
-        _payWithCard();
+        //_payWithCard();
         setState(() {
           _isLoading = false;
         });
+        BottomSnack.successSnackBar(message: body['message'], context: context);
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PayWebView(
+                      url: body['data']['authorization_url'],
+                      reference: body['data']['reference'],
+                    )));
       } else {
         BottomSnack.errorSnackBar(message: body['message'], context: context);
         setState(() {
@@ -188,12 +234,11 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
             Center(
               child: CustomButton(
                 text: 'Top up',
+                isLoading: _isLoading,
                 onTap: () {
-                  // if (_amountController.text.isNotEmpty) {
-                  //   initiateTransaction(context: context, status: 2);
-                  // }
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PayWebView()));
+                  if (_amountController.text.isNotEmpty) {
+                    initiateTransaction(context: context);
+                  }
                 },
               ),
             ),

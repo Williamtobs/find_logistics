@@ -136,7 +136,7 @@ class _SignUpScreenUserState extends ConsumerState<SignUpScreenUser> {
                           'email': _emailController.text,
                           'phone_number':
                               '$_countryCode${_phoneController.text}',
-                          "user_type": "customer",
+                          "user_type": "user",
                           'password': _passwordController.text,
                           'password_confirmation':
                               _confirmPasswordController.text,

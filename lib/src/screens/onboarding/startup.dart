@@ -16,7 +16,7 @@ class _AppStartUpState extends ConsumerState<AppStartUp> {
   void initState() {
     super.initState();
     ref.read(dashboardProvider.notifier).getProfile(context: context);
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (ref.read(dashboardProvider).user.id != null) {
         Navigator.pushAndRemoveUntil(
             context,

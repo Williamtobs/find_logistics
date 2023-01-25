@@ -56,11 +56,10 @@ class NetworkImpl implements Network {
   Future<void> logout({required BuildContext context}) async {
     await Future.delayed(const Duration(seconds: 3), () async {
       _deleteToken();
-      BottomSnack.successSnackBar(message: 'Log out successfully', context: context);
+      BottomSnack.successSnackBar(
+          message: 'Log out successfully', context: context);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LoginScreen()));
+          context, MaterialPageRoute(builder: (context) => LoginScreen()));
     });
   }
 
