@@ -6,15 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_geocoder/location_geocoder.dart';
+// ignore: depend_on_referenced_packages
+import 'package:google_maps_webservice/places.dart' as places;
 import 'package:riverpod/riverpod.dart';
 
 class PickUpViewModel extends StateNotifier<PickUpState> {
-  PickUpViewModel() : super(PickUpState(polylines: {}));
+  PickUpViewModel()
+      : super(PickUpState(
+          polylines: {},
+        ));
 
   LocatitonGeocoder geocoder = LocatitonGeocoder(mapApiKey);
   PolylinePoints polylinePoints = PolylinePoints();
 
   Map<PolylineId, Polyline> polylines = {};
+
+  places.PlaceDetails? placesDetailsResponse;
 
   getDirections() async {
     List<LatLng> polylineCoordinates = [];
@@ -44,7 +51,6 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
   getDeliveryLatLong({
     required BuildContext context,
     required String address,
-    required String phone,
   }) async {
     state = state.copyWith(isLoading: true);
     try {
@@ -62,7 +68,6 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
           MaterialPageRoute(
               builder: (context) => PickUp(
                     deliveryAddress: address,
-                    deliveryNumber: phone,
                   )));
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -110,6 +115,7 @@ class PickUpState {
   final bool isLoading;
   final String lat;
   final String long;
+  final places.PlaceDetails? placesDetailsResponse;
   final String latTo;
   final String longTo;
   final Map<PolylineId, Polyline> polylines;
@@ -120,6 +126,7 @@ class PickUpState {
     this.long = '',
     this.latTo = '',
     this.longTo = '',
+    this.placesDetailsResponse,
     required this.polylines,
   });
 
@@ -129,6 +136,7 @@ class PickUpState {
     String? long,
     String? latTo,
     String? longTo,
+    places.PlaceDetails? placesDetailsResponse,
     Map<PolylineId, Polyline>? polylines,
   }) {
     return PickUpState(
@@ -137,6 +145,8 @@ class PickUpState {
       long: long ?? this.long,
       latTo: latTo ?? this.latTo,
       longTo: longTo ?? this.longTo,
+      placesDetailsResponse:
+          placesDetailsResponse ?? this.placesDetailsResponse,
       polylines: polylines ?? this.polylines,
     );
   }

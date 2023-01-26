@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
 
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
@@ -23,7 +24,6 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
   String dispatchDay = '';
   String paymentMethod = '';
   final TextEditingController _deliveryAddress = TextEditingController();
-  final TextEditingController _phoneNumber = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +43,23 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               controller: _controller,
             ),
             const SizedBox(height: 15),
-            InAppInputField(
-              title: 'Delivery Point 1',
-              hintText: 'Enter delivery details',
-              controller: _deliveryAddress,
-              // controller: _controller,
+            InkWell(
+              onTap: () {
+                AddressSearch().addressFieldTap(context: context).then((value) {
+                  if (value != null) {
+                    model.placesDetailsResponse = value;
+                    _deliveryAddress.text = value.formattedAddress;
+                    // print(_deliveryAddress.text);
+                  }
+                });
+              },
+              child: InAppInputField(
+                title: 'Delivery Point 1',
+                hintText: 'Enter delivery address',
+                enabled: false,
+                controller: _deliveryAddress,
+                // controller: _controller,
+              ),
             ),
             const SizedBox(height: 15),
             const InAppInputField(
@@ -229,12 +241,10 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 text: 'Order',
                 isLoading: state.isLoading,
                 onTap: () {
-                  if (_deliveryAddress.text.isNotEmpty &&
-                      _phoneNumber.text.isNotEmpty) {
+                  if (_deliveryAddress.text.isNotEmpty) {
                     model.getDeliveryLatLong(
                       context: context,
                       address: _deliveryAddress.text,
-                      phone: _phoneNumber.text,
                     );
                   } else {
                     BottomSnack.errorSnackBar(

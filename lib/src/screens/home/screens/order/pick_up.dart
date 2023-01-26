@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PickUp extends ConsumerWidget {
-  final String deliveryAddress, deliveryNumber;
+  final String deliveryAddress;
   PickUp({
     super.key,
     required this.deliveryAddress,
-    required this.deliveryNumber,
   });
 
   final TextEditingController _controller = TextEditingController();
