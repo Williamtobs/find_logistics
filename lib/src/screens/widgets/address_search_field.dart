@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -16,9 +16,18 @@ class AddressSearch {
       radius: 1000,
       strictbounds: false,
       region: "ng",
-      mode: Mode.overlay,
+      mode: Mode.fullscreen,
       language: "en",
       types: ["address"],
+      // decoration: InputDecoration(
+      //   hintText: 'Search',
+      //   focusedBorder: OutlineInputBorder(
+      //     borderRadius: BorderRadius.circular(20),
+      //     borderSide: BorderSide(
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
       onError: (response) {
         onError(response, context);
       },
