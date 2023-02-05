@@ -8,7 +8,7 @@ import 'package:riverpod/riverpod.dart';
 
 class ProfileViewModel extends StateNotifier<ProfileState> {
   ProfileViewModel(this.network, this.ref)
-      : super(ProfileState(user: AppUser()));
+      : super(ProfileState(user: AppUser(wallet: Wallet())));
 
   final Network network;
   final Ref ref;

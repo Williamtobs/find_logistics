@@ -48,26 +48,28 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
     polylines[id] = polyline;
   }
 
-  getDeliveryLatLong({
-    required BuildContext context,
-    required String address,
-  }) async {
+  getDeliveryLatLong(
+      {required BuildContext context,
+      required String address,
+      required var form}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final location = await geocoder.findAddressesFromQuery(address);
-      var lat = location.first.coordinates.latitude;
-      var long = location.first.coordinates.longitude;
-      state = state.copyWith(
-        isLoading: false,
-        lat: lat.toString(),
-        long: long.toString(),
-      );
+      // final location = await geocoder.findAddressesFromQuery(address);
+      // print(location);
+      // var lat = location.first.coordinates.latitude;
+      // var long = location.first.coordinates.longitude;
+      // state = state.copyWith(
+      //   isLoading: false,
+      //   lat: lat.toString(),
+      //   long: long.toString(),
+      // );
       // ignore: use_build_context_synchronously
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => PickUp(
                     deliveryAddress: address,
+                    data: form,
                   )));
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -85,14 +87,14 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final location = await geocoder.findAddressesFromQuery(addressTo);
-      var lat = location.first.coordinates.latitude;
-      var long = location.first.coordinates.longitude;
-      getDirections();
+      // final location = await geocoder.findAddressesFromQuery(addressTo);
+      // var lat = location.first.coordinates.latitude;
+      // var long = location.first.coordinates.longitude;
+      // getDirections();
       state = state.copyWith(
         isLoading: false,
-        latTo: lat.toString(),
-        longTo: long.toString(),
+        // latTo: lat.toString(),
+        // longTo: long.toString(),
       );
       // ignore: use_build_context_synchronously
       Navigator.push(

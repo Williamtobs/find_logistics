@@ -5,7 +5,6 @@ import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/inapptextfield.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
-import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,14 +20,24 @@ class OrderDispatch extends ConsumerStatefulWidget {
 class _OrderDispatchState extends ConsumerState<OrderDispatch> {
   final TextEditingController _controller = TextEditingController();
 
-  String dispatchDay = '';
-  String paymentMethod = '';
+  int? dispatchDay;
+  int? paymentMethod;
   final TextEditingController _deliveryAddress = TextEditingController();
+  final TextEditingController _receiverName = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(orderProvider.notifier).getPaymentMethods();
+    ref.read(orderProvider.notifier).getDeliveryMethods();
+  }
 
   @override
   Widget build(BuildContext context) {
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(pickUpProvider);
+    final orderState = ref.watch(orderProvider);
+    // final orderModel = ref.read(orderProvider.notifier);
     return BaseScreen(
       title: 'Order a dispatcher',
       child: Padding(
@@ -41,6 +50,12 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               title: 'Pickup',
               hintText: 'Enter pickup details',
               controller: _controller,
+            ),
+            const SizedBox(height: 15),
+            InAppInputField(
+              title: 'Receiver\'s Name',
+              hintText: 'Enter receiver name',
+              controller: _receiverName,
             ),
             const SizedBox(height: 15),
             InkWell(
@@ -79,67 +94,42 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 color: secondaryColor,
               ),
             ),
+            orderState.deliveryMethod.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    children: orderState.deliveryMethod.map((e) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            dispatchDay = e.id;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              dispatchDay != e.id
+                                  ? Icons.radio_button_unchecked
+                                  : Icons.radio_button_checked,
+                              color: primaryColor,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              e.name,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
             const SizedBox(
               height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  dispatchDay = 'same day';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    dispatchDay != 'same day'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Same day delivery',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  dispatchDay = 'next day';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    dispatchDay != 'next day'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Next day delivery',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(
               height: 10,
@@ -155,84 +145,40 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
             const SizedBox(
               height: 10,
             ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  paymentMethod = 'e-wallet';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    paymentMethod != 'e-wallet'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
+            orderState.paymentsMethod.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    children: orderState.paymentsMethod.map((e) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentMethod = e.id;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              paymentMethod != e.id
+                                  ? Icons.radio_button_unchecked
+                                  : Icons.radio_button_checked,
+                              color: primaryColor,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              e.name,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'E-wallet',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  paymentMethod = 'cash';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    paymentMethod != 'cash'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Cash',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(Icons.add, size: 24, color: secondaryColor),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Add new card',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: secondaryColor,
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(
               height: 40,
             ),
@@ -241,15 +187,46 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 text: 'Order',
                 isLoading: state.isLoading,
                 onTap: () {
-                  if (_deliveryAddress.text.isNotEmpty) {
-                    model.getDeliveryLatLong(
+                  model.getDeliveryLatLong(
                       context: context,
-                      address: _deliveryAddress.text,
-                    );
-                  } else {
-                    BottomSnack.errorSnackBar(
-                        message: 'Enter requires field', context: context);
-                  }
+                      address:
+                          'Bodija Market, 25B, Bodija Mini Shopping Centre, Ibadan',
+                      form: {
+                        'pickup_detail': _controller.text,
+                        // 'order_to_address': _deliveryAddress.text,
+                        'order_to_address':
+                            'Bodija Market, 25B, Bodija Mini Shopping Centre, Ibadan',
+                        "payment_method_id": paymentMethod,
+                        "delivery_type_id": dispatchDay,
+                        "receiver_name": _receiverName.text,
+                        // "order_to_lat": model
+                        //     .placesDetailsResponse!.geometry!.location.lat,
+                        "order_to_lat": 32233.3434,
+                        // "order_to_long": model
+                        //     .placesDetailsResponse!.geometry!.location.lng,
+                        "order_to_long": 15390.345,
+                      });
+                  // if (_deliveryAddress.text.isNotEmpty) {
+                  //   model.getDeliveryLatLong(
+                  //       context: context,
+                  //       address: _deliveryAddress.text,
+                  //       form: {
+                  //         'pickup_detail': _controller.text,
+                  //         // 'order_to_address': _deliveryAddress.text,
+                  //         'order_to_address': 'bodija mareket',
+                  //         "payment_method_id": paymentMethod,
+                  //         "delivery_type_id": dispatchDay,
+                  //         // "order_to_lat": model
+                  //         //     .placesDetailsResponse!.geometry!.location.lat,
+                  //         "order_to_lat": 32233.3434,
+                  //         // "order_to_long": model
+                  //         //     .placesDetailsResponse!.geometry!.location.lng,
+                  //         "order_to_long": 15390.345,
+                  //       });
+                  // } else {
+                  //   BottomSnack.errorSnackBar(
+                  //       message: 'Enter requires field', context: context);
+                  // }
                 },
               ),
             ),

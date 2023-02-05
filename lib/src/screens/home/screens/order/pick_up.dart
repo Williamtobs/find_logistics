@@ -4,12 +4,15 @@ import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 class PickUp extends ConsumerWidget {
   final String deliveryAddress;
+  final Map data;
   PickUp({
     super.key,
     required this.deliveryAddress,
+    required this.data,
   });
 
   final TextEditingController _controller = TextEditingController();
@@ -18,8 +21,10 @@ class PickUp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(dashboardProvider).user.id;
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(pickUpProvider);
+    final orderModel = ref.read(orderProvider.notifier);
 
     return BaseScreen(
       title: 'Pickup',
@@ -57,13 +62,40 @@ class PickUp extends ConsumerWidget {
               Center(
                 child: CustomButton(
                   text: 'Save',
-                  isLoading: state.isLoading,
+                  isLoading: false,
                   onTap: () {
-                    model.getLonglang(
-                      context: context,
-                      address: deliveryAddress,
-                      addressTo: _pickUpAddress.text,
-                    );
+                    print(userId);
+                    orderModel.placeOrder(form: {
+                      'customer_id': userId,
+                      'order_from_address': 'university of ibadan',
+                      'order_to_address': data['order_to_address'],
+                      'pickup_details': data['pickup_detail'],
+                      'payment_method_id': data['payment_method_id'],
+                      'delivery_type_id': data['delivery_type_id'],
+                      "order_from_lat": 32433.3434,
+                      "order_from_long": 25390.345,
+                      "order_to_lat": data['order_to_lat'],
+                      "order_to_long": data['order_to_long'],
+                      'distance': calculateDistance(32433.3434, 25390.345,
+                          data['order_to_lat'], data['order_to_long']),
+                      "status": "PENDING",
+                      "senders_name": _controller.text,
+                      "receivers_name": data['receiver_name'],
+                      "receivers_phone": _pickUpNumber.text,
+                      "receivers_address": "",
+                      "house_number": "",
+                      "area": "",
+                      "closest_landmark": ""
+                    }, context: context);
+                    // .then((value) {
+                    //   if (value == true) {
+                    //     model.getLonglang(
+                    //       context: context,
+                    //       address: deliveryAddress,
+                    //       addressTo: 'university of ibadan',
+                    //     );
+                    //   }
+                    // });
                   },
                 ),
               ),
@@ -75,5 +107,16 @@ class PickUp extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    double distanceInMeters = 12742 * asin(sqrt(a));
+    print(distanceInMeters);
+    return distanceInMeters * 1000;
   }
 }

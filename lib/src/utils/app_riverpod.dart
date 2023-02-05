@@ -5,6 +5,8 @@ import 'package:find_logistic/src/screens/auth/login/login_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/dashboard_viewmodel.dart';
+import 'package:find_logistic/src/screens/home/home_viewmodel.dart';
+import 'package:find_logistic/src/screens/home/screens/order/order_dispatch_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/order/pick_up_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/profile/profile_viewmodel.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen_viewmodel.dart';
@@ -42,6 +44,10 @@ final dashboardProvider =
   return DashboardViewModel(ref.read(networkProvider));
 });
 
+final homeProvider = StateNotifierProvider<HomeViewModel, HomeState>((ref) {
+  return HomeViewModel(ref.read(networkProvider));
+});
+
 final profileProvider =
     StateNotifierProvider<ProfileViewModel, ProfileState>((ref) {
   return ProfileViewModel(ref.read(networkProvider), ref);
@@ -50,4 +56,8 @@ final profileProvider =
 final pickUpProvider =
     StateNotifierProvider<PickUpViewModel, PickUpState>((ref) {
   return PickUpViewModel();
+});
+
+final orderProvider = StateNotifierProvider<OrderViewModel, OrderState>((ref) {
+  return OrderViewModel(ref.read(networkProvider));
 });

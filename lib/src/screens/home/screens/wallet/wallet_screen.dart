@@ -20,7 +20,7 @@ class WalletScreen extends ConsumerWidget {
           child: Column(
             children: [
               BalanceBox(
-                balance: (state.user.wallet!.availableBalance!).toString(),
+                balance: (state.user.wallet.availableBalance!).toString(),
               ),
               const SizedBox(height: 20),
               InkWell(

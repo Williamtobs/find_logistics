@@ -8,7 +8,8 @@ import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends StateNotifier<LoginState> {
-  LoginViewModel(this.network) : super(LoginState(user: AppUser()));
+  LoginViewModel(this.network)
+      : super(LoginState(user: AppUser(wallet: Wallet())));
 
   final Network network;
 

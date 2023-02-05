@@ -4,10 +4,12 @@ import 'package:find_logistic/src/screens/home/screens/settings/setting.dart';
 import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart';
 import 'package:find_logistic/src/screens/home/widgets/balance.dart';
 import 'package:find_logistic/src/screens/home/widgets/options.dart';
+import 'package:find_logistic/src/screens/tabs/history/history.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -22,11 +24,13 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     ref.read(dashboardProvider.notifier).getProfile(context: context);
+    ref.read(homeProvider.notifier).fetchRecentActivities();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardProvider);
+    final home = ref.watch(homeProvider);
     //final model = ref.read(dashboardProvider.notifier);
 
     return Scaffold(
@@ -57,7 +61,7 @@ class _HomeState extends ConsumerState<Home> {
               height: 5,
             ),
             BalanceBox(
-                balance: (state.user.wallet!.availableBalance!).toString()),
+                balance: (state.user.wallet.availableBalance!).toString()),
             const SizedBox(
               height: 50,
             ),
@@ -109,9 +113,17 @@ class _HomeState extends ConsumerState<Home> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Options(
-                        title: 'History',
-                        img: 'assets/images/history_home.png',
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const History()));
+                        },
+                        child: const Options(
+                          title: 'History',
+                          img: 'assets/images/history_home.png',
+                        ),
                       ),
                       const SizedBox(
                         width: 50,
@@ -148,8 +160,70 @@ class _HomeState extends ConsumerState<Home> {
                 fontStyle: FontStyle.italic,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            home.activities.isEmpty
+                ? const Center(
+                    child: Text('No Recent Activities'),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: home.activities.length,
+                      itemBuilder: (context, index) {
+                        return EachActivities(
+                          time: DateFormat.yMMMEd()
+                              .format(home.activities[index].createdAt!),
+                          title: home.activities[index].name,
+                        );
+                      },
+                    ),
+                  )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class EachActivities extends StatelessWidget {
+  final String time, title;
+  const EachActivities({Key? key, required this.time, required this.title})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 43,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.09),
+            spreadRadius: 0,
+            blurRadius: 4,
+            offset: Offset(4, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(title,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.italic,
+              )),
+          const Spacer(),
+          Text(time,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.italic,
+              )),
+        ],
       ),
     );
   }

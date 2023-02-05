@@ -10,7 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupViewModel extends StateNotifier<SignupState> {
   SignupViewModel(this.network)
-      : super(SignupState(user: AuthModel(), appUser: AppUser()));
+      : super(
+            SignupState(user: AuthModel(), appUser: AppUser(wallet: Wallet())));
 
   final Network network;
 

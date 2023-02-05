@@ -20,7 +20,7 @@ class AppUser {
     this.address,
     this.longitude,
     this.latitude,
-    this.wallet,
+    required this.wallet,
   });
 
   final int? id;
@@ -43,7 +43,7 @@ class AppUser {
   final dynamic address;
   final dynamic longitude;
   final dynamic latitude;
-  final Wallet? wallet;
+  final Wallet wallet;
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
     return AppUser(
@@ -73,7 +73,7 @@ class AppUser {
       address: json["address"],
       longitude: json["longitude"],
       latitude: json["latitude"],
-      wallet: json["wallet"] == null ? null : Wallet.fromJson(json["wallet"]),
+      wallet: Wallet.fromJson(json["wallet"]),
     );
   }
 }
