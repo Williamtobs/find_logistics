@@ -19,7 +19,9 @@ class MapScreen extends ConsumerStatefulWidget {
 }
 
 class _MapScreenState extends ConsumerState<MapScreen> {
-  GoogleMapController? mapController; //contrller for Google map
+  GoogleMapController? mapController;
+
+  num? amount;
   // PolylinePoints polylinePoints = PolylinePoints();
 
   // Map<PolylineId, Polyline> polylines = {};
@@ -46,14 +48,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(pickUpProvider.notifier).getDirections();
+    final model = ref.read(pickUpProvider.notifier);
+    ref.read(pickUpProvider.notifier).getDirections(
+        model.pickUpDetailsResponse!.geometry!.location.lat,
+        model.pickUpDetailsResponse!.geometry!.location.lng,
+        model.placesDetailsResponse!.geometry!.location.lat,
+        model.placesDetailsResponse!.geometry!.location.lng);
+    amount = ref.watch(orderProvider).orderDetails.estimatedAmount;
   }
 
   @override
   Widget build(BuildContext context) {
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(orderProvider);
-
     final LatLng kMapCenter = LatLng(
         (model.pickUpDetailsResponse!.geometry!.location.lat),
         (model.pickUpDetailsResponse!.geometry!.location.lng));
@@ -192,7 +199,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       child: SelectedLocation(
                         addressFrom: widget.address!,
                         addressTo: widget.addressTo!,
-                        amount: state.orderDetails.estimatedAmount,
+                        amount: amount!,
+                        onTap: () {
+                          setState(() {
+                            amount = amount! - 100;
+                          });
+                        },
+                        onTap2: () {
+                          setState(() {
+                            amount = amount! + 100;
+                          });
+                        },
                       ),
                     )
             ],
@@ -416,12 +433,14 @@ class SelectedLocation extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Text(
-              addressFrom,
-              style: GoogleFonts.inter(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+            Expanded(
+              child: Text(
+                addressFrom,
+                style: GoogleFonts.inter(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
@@ -449,12 +468,14 @@ class SelectedLocation extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Text(
-              addressTo,
-              style: GoogleFonts.inter(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+            Expanded(
+              child: Text(
+                addressTo,
+                style: GoogleFonts.inter(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],

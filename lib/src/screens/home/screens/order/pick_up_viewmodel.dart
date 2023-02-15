@@ -24,12 +24,12 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
   places.PlaceDetails? placesDetailsResponse;
   places.PlaceDetails? pickUpDetailsResponse;
 
-  getDirections() async {
+  getDirections(lat, lng, latTo, lngTo) async {
     List<LatLng> polylineCoordinates = [];
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       mapApiKey,
-      PointLatLng(double.parse(state.lat), double.parse(state.long)),
-      PointLatLng(double.parse(state.latTo), double.parse(state.longTo)),
+      PointLatLng(lat, lng),
+      PointLatLng(latTo, lngTo),
       travelMode: TravelMode.driving,
     );
     if (result.points.isNotEmpty) {
