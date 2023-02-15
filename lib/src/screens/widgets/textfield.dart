@@ -6,12 +6,14 @@ class AppInputField extends StatelessWidget {
   final String hintText;
   final String? hint2;
   final TextEditingController controller;
-  final bool? obscureText;
+  final bool? obscureText, enabled;
   const AppInputField(
       {Key? key,
       required this.hintText,
       required this.controller,
-      this.obscureText,  this.hint2})
+      this.enabled,
+      this.obscureText,
+      this.hint2})
       : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class AppInputField extends StatelessWidget {
             height: 3,
           ),
           TextField(
+            enabled: enabled ?? true,
             controller: controller,
             obscureText: obscureText ?? false,
             style: GoogleFonts.inter(
@@ -58,10 +61,9 @@ class AppInputField extends StatelessWidget {
               color: primaryColor,
             ),
             decoration: InputDecoration(
-              border: InputBorder.none, isDense: true,
-              hintText:hint2
-              //contentPadding: EdgeInsets.symmetric(horizontal: 20),
-            ),
+                border: InputBorder.none, isDense: true, hintText: hint2
+                //contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                ),
           )
         ],
       ),

@@ -161,7 +161,7 @@ class _HomeState extends ConsumerState<Home> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             home.activities.isEmpty
                 ? const Center(
@@ -170,11 +170,15 @@ class _HomeState extends ConsumerState<Home> {
                 : Expanded(
                     child: ListView.builder(
                       itemCount: home.activities.length,
+                      padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
-                        return EachActivities(
-                          time: DateFormat.yMMMEd()
-                              .format(home.activities[index].createdAt!),
-                          title: home.activities[index].name,
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: EachActivities(
+                            time: DateFormat.yMMMEd()
+                                .format(home.activities[index].createdAt!),
+                            title: home.activities[index].name,
+                          ),
                         );
                       },
                     ),
@@ -195,7 +199,7 @@ class EachActivities extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 43,
+      height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -210,13 +214,15 @@ class EachActivities extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(title,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                fontStyle: FontStyle.italic,
-              )),
-          const Spacer(),
+          Expanded(
+            child: Text(title,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.italic,
+                )),
+          ),
+          const SizedBox(width: 10),
           Text(time,
               style: GoogleFonts.inter(
                 fontSize: 13,

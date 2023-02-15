@@ -51,13 +51,16 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final map = ref.watch(pickUpProvider);
+    final model = ref.read(pickUpProvider.notifier);
+    final state = ref.watch(orderProvider);
 
-    final LatLng kMapCenter =
-        LatLng(double.parse(map.lat), double.parse(map.long));
+    final LatLng kMapCenter = LatLng(
+        (model.pickUpDetailsResponse!.geometry!.location.lat),
+        (model.pickUpDetailsResponse!.geometry!.location.lng));
 
-    final LatLng kMapCenter2 =
-        LatLng(double.parse(map.latTo), double.parse(map.longTo));
+    final LatLng kMapCenter2 = LatLng(
+        model.placesDetailsResponse!.geometry!.location.lat,
+        model.placesDetailsResponse!.geometry!.location.lng);
 
     final CameraPosition kInitialPosition =
         CameraPosition(target: kMapCenter, zoom: 14.0, tilt: 0, bearing: 0);
@@ -189,6 +192,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       child: SelectedLocation(
                         addressFrom: widget.address!,
                         addressTo: widget.addressTo!,
+                        amount: state.orderDetails.estimatedAmount,
                       ),
                     )
             ],
@@ -384,10 +388,15 @@ class SeledtedDriver extends StatelessWidget {
 
 class SelectedLocation extends StatelessWidget {
   final String addressFrom, addressTo;
+  final num amount;
+  final Function()? onTap, onTap2;
   const SelectedLocation({
     super.key,
     required this.addressFrom,
     required this.addressTo,
+    required this.amount,
+    this.onTap,
+    this.onTap2,
   });
 
   @override
@@ -474,16 +483,21 @@ class SelectedLocation extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.remove, color: Colors.white, size: 20),
+              InkWell(
+                  onTap: onTap,
+                  child:
+                      const Icon(Icons.remove, color: Colors.white, size: 20)),
               Text(
-                'NGN 900',
+                'NGN $amount',
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              const Icon(Icons.add, color: Colors.white, size: 20),
+              InkWell(
+                  onTap: onTap2,
+                  child: const Icon(Icons.add, color: Colors.white, size: 20)),
             ],
           ),
         ),

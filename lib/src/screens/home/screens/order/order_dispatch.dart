@@ -187,46 +187,29 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 text: 'Order',
                 isLoading: state.isLoading,
                 onTap: () {
-                  model.getDeliveryLatLong(
-                      context: context,
-                      address:
-                          'Bodija Market, 25B, Bodija Mini Shopping Centre, Ibadan',
-                      form: {
-                        'pickup_detail': _controller.text,
-                        // 'order_to_address': _deliveryAddress.text,
-                        'order_to_address':
-                            'Bodija Market, 25B, Bodija Mini Shopping Centre, Ibadan',
-                        "payment_method_id": paymentMethod,
-                        "delivery_type_id": dispatchDay,
-                        "receiver_name": _receiverName.text,
-                        // "order_to_lat": model
-                        //     .placesDetailsResponse!.geometry!.location.lat,
-                        "order_to_lat": 32233.3434,
-                        // "order_to_long": model
-                        //     .placesDetailsResponse!.geometry!.location.lng,
-                        "order_to_long": 15390.345,
-                      });
-                  // if (_deliveryAddress.text.isNotEmpty) {
-                  //   model.getDeliveryLatLong(
-                  //       context: context,
-                  //       address: _deliveryAddress.text,
-                  //       form: {
-                  //         'pickup_detail': _controller.text,
-                  //         // 'order_to_address': _deliveryAddress.text,
-                  //         'order_to_address': 'bodija mareket',
-                  //         "payment_method_id": paymentMethod,
-                  //         "delivery_type_id": dispatchDay,
-                  //         // "order_to_lat": model
-                  //         //     .placesDetailsResponse!.geometry!.location.lat,
-                  //         "order_to_lat": 32233.3434,
-                  //         // "order_to_long": model
-                  //         //     .placesDetailsResponse!.geometry!.location.lng,
-                  //         "order_to_long": 15390.345,
-                  //       });
-                  // } else {
-                  //   BottomSnack.errorSnackBar(
-                  //       message: 'Enter requires field', context: context);
-                  // }
+                  if (_deliveryAddress.text.isNotEmpty &&
+                      _controller.text.isNotEmpty &&
+                      _receiverName.text.isNotEmpty &&
+                      dispatchDay != null &&
+                      paymentMethod != null) {
+                    model.getDeliveryLatLong(
+                        context: context,
+                        address: _deliveryAddress.text,
+                        form: {
+                          'pickup_detail': _controller.text,
+                          'order_to_address': _deliveryAddress.text,
+                          "payment_method_id": paymentMethod,
+                          "delivery_type_id": dispatchDay,
+                          "receiver_name": _receiverName.text,
+                          "order_to_lat": model
+                              .placesDetailsResponse!.geometry!.location.lat,
+                          "order_to_long": model
+                              .placesDetailsResponse!.geometry!.location.lng,
+                        });
+                  } else {
+                    BottomSnack.errorSnackBar(
+                        message: 'Enter requires field', context: context);
+                  }
                 },
               ),
             ),

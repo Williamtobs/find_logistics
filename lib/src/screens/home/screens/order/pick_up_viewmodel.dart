@@ -22,6 +22,7 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
   Map<PolylineId, Polyline> polylines = {};
 
   places.PlaceDetails? placesDetailsResponse;
+  places.PlaceDetails? pickUpDetailsResponse;
 
   getDirections() async {
     List<LatLng> polylineCoordinates = [];
