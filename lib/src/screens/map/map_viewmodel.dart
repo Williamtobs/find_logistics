@@ -17,7 +17,7 @@ class MapViewModel extends StateNotifier<MapState> {
     var body = response.data;
     if (response.statusCode == 200) {
       if (body['status'] == true) {
-        BottomSnack.errorSnackBar(message: body['message'], context: context);
+        BottomSnack.successSnackBar(message: body['message'], context: context);
         return true;
       } else {
         state = state.copyWith(isLoading: false);
@@ -61,18 +61,49 @@ class MapViewModel extends StateNotifier<MapState> {
           message: 'Request could not be completed', context: context);
     }
   }
+
+  riderStatus(String ref) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response =
+          await _network.postWithToken(path: 'order/status', formData: {
+        'order_reference': ref,
+      });
+      var body = response.data;
+      if (response.statusCode == 200) {
+        if (body['status'] == true) {
+          state = state.copyWith(
+              isLoading: false, riderStatus: body['data']['status']);
+        } else {
+          state = state.copyWith(isLoading: false);
+        }
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 }
 
 class MapState {
   final bool isLoading;
   final List<NegotiateOrderModel> negotiateOrders;
+  final bool riderStatus;
 
-  MapState({required this.isLoading, required this.negotiateOrders});
+  MapState(
+      {required this.isLoading,
+      required this.negotiateOrders,
+      this.riderStatus = false});
 
   MapState copyWith(
-      {bool? isLoading, List<NegotiateOrderModel>? negotiateOrders}) {
+      {bool? isLoading,
+      List<NegotiateOrderModel>? negotiateOrders,
+      bool? riderStatus}) {
     return MapState(
-        isLoading: isLoading ?? this.isLoading,
-        negotiateOrders: negotiateOrders ?? this.negotiateOrders);
+      isLoading: isLoading ?? this.isLoading,
+      negotiateOrders: negotiateOrders ?? this.negotiateOrders,
+      riderStatus: riderStatus ?? this.riderStatus,
+    );
   }
 }

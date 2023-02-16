@@ -9,8 +9,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SelectRider extends ConsumerWidget {
   final num amount;
-  final String orderRef;
-  const SelectRider({super.key, required this.amount, required this.orderRef});
+  final String address, addressTo, orderRef;
+  const SelectRider({
+    super.key,
+    required this.amount,
+    required this.orderRef,
+    required this.address,
+    required this.addressTo,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +95,8 @@ class SelectRider extends ConsumerWidget {
               physics: const BouncingScrollPhysics(),
               itemBuilder: ((context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: EachDriver(
                     carName: riders[index].firstName,
                     driverName:
@@ -97,6 +104,9 @@ class SelectRider extends ConsumerWidget {
                     price: amount.toString(),
                     orderRef: orderRef,
                     driverId: riders[index].id,
+                    data: riders[index],
+                    address: address,
+                    addressTo: addressTo,
                   ),
                 );
               })),
@@ -139,12 +149,17 @@ class SelectRider extends ConsumerWidget {
 class EachDriver extends ConsumerWidget {
   final String carName, driverName, price, orderRef;
   final int driverId;
+  final String address, addressTo;
+  final NegotiateOrderModel data;
   const EachDriver(
       {super.key,
       required this.carName,
       required this.driverName,
       required this.orderRef,
+      required this.data,
       required this.driverId,
+      required this.address,
+      required this.addressTo,
       required this.price});
 
   @override
@@ -232,7 +247,7 @@ class EachDriver extends ConsumerWidget {
                       height: 5,
                     ),
                     Text(
-                      '13 min \n102 m',
+                      '${data.distance} m',
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
@@ -246,33 +261,28 @@ class EachDriver extends ConsumerWidget {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // const SizedBox(
-                //   width: 110,
-                //   child: DeclineButton(),
-                // ),
-                CustomButton(
-                  text: 'Make offer',
-                  size: MediaQuery.of(context).size.width,
-                  onTap: () {
-                    model.acceptRider(context: context, formData: {
-                      'order_reference': orderRef,
-                      'user_id': driverId,
-                    }).then((value) {
-                      if (value) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MapScreen(
-                                      driverPicked: true,
-                                    )));
-                      }
-                    });
-                  },
-                ),
-              ],
+            CustomButton(
+              text: 'Make offer',
+              size: MediaQuery.of(context).size.width,
+              onTap: () {
+                model.acceptRider(context: context, formData: {
+                  'order_reference': orderRef,
+                  'user_id': driverId,
+                }).then((value) {
+                  if (value) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MapScreen(
+                                  driverPicked: true,
+                                  data: data,
+                                  transRef: orderRef,
+                                  address: address,
+                                  addressTo: addressTo,
+                                )));
+                  }
+                });
+              },
             )
           ],
         ),

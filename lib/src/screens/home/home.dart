@@ -169,7 +169,9 @@ class _HomeState extends ConsumerState<Home> {
                   )
                 : Expanded(
                     child: ListView.builder(
-                      itemCount: home.activities.length,
+                      itemCount: home.activities.length > 2
+                          ? 2
+                          : home.activities.length,
                       padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
                         return Padding(
@@ -199,10 +201,11 @@ class EachActivities extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 45,
+      height: 47,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
         boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.09),

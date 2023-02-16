@@ -1,3 +1,5 @@
+import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/app/model/negotiate_order_model.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
 import 'package:find_logistic/src/screens/map/select_rider.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
@@ -10,9 +12,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   final bool driverPicked;
-  final String? address, addressTo;
+  final String? address, addressTo, transRef;
+  final NegotiateOrderModel? data;
   const MapScreen(
-      {super.key, this.driverPicked = false, this.address, this.addressTo});
+      {super.key,
+      this.driverPicked = false,
+      this.address,
+      this.addressTo,
+      this.transRef,
+      this.data});
 
   @override
   ConsumerState<MapScreen> createState() => _MapScreenState();
@@ -21,7 +29,7 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   GoogleMapController? mapController;
 
-  num? amount;
+  num amount = 0;
   // PolylinePoints polylinePoints = PolylinePoints();
 
   // Map<PolylineId, Polyline> polylines = {};
@@ -48,13 +56,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void initState() {
     super.initState();
-    final model = ref.read(pickUpProvider.notifier);
-    model.getDirections(
-        model.pickUpDetailsResponse!.geometry!.location.lat,
-        model.pickUpDetailsResponse!.geometry!.location.lng,
-        model.placesDetailsResponse!.geometry!.location.lat,
-        model.placesDetailsResponse!.geometry!.location.lng);
-    amount = ref.watch(orderProvider).orderDetails.estimatedAmount;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final model = ref.read(pickUpProvider.notifier);
+      model.getDirections(
+          model.pickUpDetailsResponse!.geometry!.location.lat,
+          model.pickUpDetailsResponse!.geometry!.location.lng,
+          model.placesDetailsResponse!.geometry!.location.lat,
+          model.placesDetailsResponse!.geometry!.location.lng);
+      amount = ref.watch(orderProvider).orderDetails.estimatedAmount;
+    });
   }
 
   @override
@@ -183,7 +193,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               ),
               const Spacer(),
               widget.driverPicked
-                  ? const SeledtedDriver()
+                  ? SeledtedDriver(
+                      data: widget.data!,
+                      transRef: widget.transRef!,
+                    )
                   : Container(
                       width: MediaQuery.of(context).size.width,
                       height: 250,
@@ -199,15 +212,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       child: SelectedLocation(
                         addressFrom: widget.address!,
                         addressTo: widget.addressTo!,
-                        amount: amount!,
+                        amount: amount,
                         onTap: () {
                           setState(() {
-                            amount = amount! - 100;
+                            amount = amount - 100;
                           });
                         },
                         onTap2: () {
                           setState(() {
-                            amount = amount! + 100;
+                            amount = amount + 100;
                           });
                         },
                       ),
@@ -220,161 +233,184 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 }
 
-class SeledtedDriver extends StatelessWidget {
-  
-  const SeledtedDriver({Key? key}) : super(key: key);
+class SeledtedDriver extends ConsumerStatefulWidget {
+  final NegotiateOrderModel data;
+  final String transRef;
+  const SeledtedDriver({Key? key, required this.data, required this.transRef})
+      : super(key: key);
+
+  @override
+  ConsumerState<SeledtedDriver> createState() => _SeledtedDriverState();
+}
+
+class _SeledtedDriverState extends ConsumerState<SeledtedDriver> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(mapProvider.notifier).riderStatus(widget.transRef);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(mapProvider);
+    ref.watch(mapProvider.notifier).riderStatus(widget.transRef);
     return Stack(
       children: [
         SizedBox(
           height: 320,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 270,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(22),
-                      topRight: Radius.circular(22),
-                    )),
-                child: Column(
+          child: state.isLoading && state.riderStatus == false
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Text(
-                      'Amadi Obi is on his way...',
-                      style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 270,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: Color.fromRGBO(153, 186, 102, 1),
-                          size: 16,
-                        ),
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: Color.fromRGBO(153, 186, 102, 1),
-                          size: 16,
-                        ),
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: Color.fromRGBO(153, 186, 102, 1),
-                          size: 16,
-                        ),
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: Color.fromRGBO(0, 0, 0, 0.15),
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Rating from 94 completed rides',
-                      style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              'Amount',
-                              style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(22),
+                            topRight: Radius.circular(22),
+                          )),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Text(
+                            '${widget.data.lastName} ${widget.data.lastName} is on his way...',
+                            style: GoogleFonts.inter(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.star_border_outlined,
+                                color: Color.fromRGBO(153, 186, 102, 1),
+                                size: 16,
+                              ),
+                              Icon(
+                                Icons.star_border_outlined,
+                                color: Color.fromRGBO(153, 186, 102, 1),
+                                size: 16,
+                              ),
+                              Icon(
+                                Icons.star_border_outlined,
+                                color: Color.fromRGBO(153, 186, 102, 1),
+                                size: 16,
+                              ),
+                              Icon(
+                                Icons.star_border_outlined,
+                                color: Color.fromRGBO(0, 0, 0, 0.15),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Rating from 94 completed rides',
+                            style: GoogleFonts.inter(
+                              color: Colors.black,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    'Amount',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'N900',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Distance away',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    '${widget.data.distance} m',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Center(
+                            child: SizedBox(
+                              width: 140,
+                              child: CustomButton(
+                                text: 'Cancel Ride',
+                                onTap: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Home()),
+                                      (route) => false);
+                                  //SelectRider
+                                },
                               ),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'N900',
-                              style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'Arrival Time',
-                              style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '10 minutes',
-                              style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: SizedBox(
-                        width: 140,
-                        child: CustomButton(
-                          text: 'Cancel Ride',
-                          onTap: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                (route) => false);
-                            //SelectRider
-                          },
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
         ),
         Align(
           alignment: Alignment.topCenter,
@@ -547,6 +583,8 @@ class SelectedLocation extends ConsumerWidget {
                             builder: (context) => SelectRider(
                                   amount: amount,
                                   orderRef: trnRef.orderDetails.orderReference,
+                                  address: addressFrom,
+                                  addressTo: addressTo,
                                 )));
                   }
                 });
