@@ -9,6 +9,7 @@ import 'package:find_logistic/src/screens/home/home_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/order/pick_up_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/profile/profile_viewmodel.dart';
+import 'package:find_logistic/src/screens/map/map_viewmodel.dart';
 import 'package:find_logistic/src/screens/wallet/wallet_screen_viewmodel.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -60,4 +61,8 @@ final pickUpProvider =
 
 final orderProvider = StateNotifierProvider<OrderViewModel, OrderState>((ref) {
   return OrderViewModel(ref.read(networkProvider));
+});
+
+final mapProvider = StateNotifierProvider<MapViewModel, MapState>((ref) {
+  return MapViewModel(ref.read(networkProvider));
 });

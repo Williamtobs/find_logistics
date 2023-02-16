@@ -49,7 +49,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void initState() {
     super.initState();
     final model = ref.read(pickUpProvider.notifier);
-    ref.read(pickUpProvider.notifier).getDirections(
+    model.getDirections(
         model.pickUpDetailsResponse!.geometry!.location.lat,
         model.pickUpDetailsResponse!.geometry!.location.lng,
         model.placesDetailsResponse!.geometry!.location.lat,
@@ -221,6 +221,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 }
 
 class SeledtedDriver extends StatelessWidget {
+  
   const SeledtedDriver({Key? key}) : super(key: key);
 
   @override
@@ -403,7 +404,7 @@ class SeledtedDriver extends StatelessWidget {
   }
 }
 
-class SelectedLocation extends StatelessWidget {
+class SelectedLocation extends ConsumerWidget {
   final String addressFrom, addressTo;
   final num amount;
   final Function()? onTap, onTap2;
@@ -417,7 +418,10 @@ class SelectedLocation extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final orderState = ref.watch(mapProvider);
+    final trnRef = ref.read(orderProvider);
+    final order = ref.watch(mapProvider.notifier);
     return Column(
       children: [
         const SizedBox(
@@ -530,11 +534,23 @@ class SelectedLocation extends StatelessWidget {
             width: 140,
             child: CustomButton(
               text: 'Find rider',
+              isLoading: orderState.isLoading,
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SelectRider()));
+                order.negotiateOrder(context: context, formData: {
+                  "order_reference": trnRef.orderDetails.orderReference,
+                  "amount": amount.toString(),
+                }).then((value) {
+                  if (value) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelectRider(
+                                  amount: amount,
+                                  orderRef: trnRef.orderDetails.orderReference,
+                                )));
+                  }
+                });
+
                 //SelectRider
               },
             ),

@@ -1,14 +1,22 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/app/model/negotiate_order_model.dart';
 import 'package:find_logistic/src/screens/map/map.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SelectRider extends StatelessWidget {
-  const SelectRider({super.key});
+class SelectRider extends ConsumerWidget {
+  final num amount;
+  final String orderRef;
+  const SelectRider({super.key, required this.amount, required this.orderRef});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(mapProvider);
+    final model = ref.read(mapProvider.notifier);
+    List<NegotiateOrderModel> riders = state.negotiateOrders;
     return Scaffold(
       body: Column(
         children: [
@@ -75,52 +83,74 @@ class SelectRider extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: EachDriver(
-              carName: 'Toyota Corolla (Black)',
-              driverName: 'Joseph Nnamdi',
-              price: '1200',
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: EachDriver(
-              carName: 'Toyota Corolla (Wine)',
-              driverName: 'Akin Olabode',
-              price: '1000',
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: EachDriver(
-              carName: 'Toyota Corolla (Wine)',
-              driverName: 'Akin Olabode',
-              price: '900',
-            ),
-          )
+          ListView.builder(
+              itemCount: riders.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: ((context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: EachDriver(
+                    carName: riders[index].firstName,
+                    driverName:
+                        '${riders[index].firstName} ${riders[index].lastName}',
+                    price: amount.toString(),
+                    orderRef: orderRef,
+                    driverId: riders[index].id,
+                  ),
+                );
+              })),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 10),
+          //   child: EachDriver(
+          //     carName: 'Toyota Corolla (Black)',
+          //     driverName: 'Joseph Nnamdi',
+          //     price: '1200',
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 20,
+          // ),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 10),
+          //   child: EachDriver(
+          //     carName: 'Toyota Corolla (Wine)',
+          //     driverName: 'Akin Olabode',
+          //     price: '1000',
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 20,
+          // ),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 10),
+          //   child: EachDriver(
+          //     carName: 'Toyota Corolla (Wine)',
+          //     driverName: 'Akin Olabode',
+          //     price: '900',
+          //   ),
+          // )
         ],
       ),
     );
   }
 }
 
-class EachDriver extends StatelessWidget {
-  final String carName, driverName, price;
+class EachDriver extends ConsumerWidget {
+  final String carName, driverName, price, orderRef;
+  final int driverId;
   const EachDriver(
       {super.key,
       required this.carName,
       required this.driverName,
+      required this.orderRef,
+      required this.driverId,
       required this.price});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(mapProvider);
+    final model = ref.read(mapProvider.notifier);
     return Material(
       elevation: 5,
       shape: const RoundedRectangleBorder(
@@ -219,23 +249,28 @@ class EachDriver extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(
-                  width: 110,
-                  child: DeclineButton(),
-                ),
-                SizedBox(
-                  width: 110,
-                  child: CustomButton(
-                    text: 'Accept',
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MapScreen(
-                                    driverPicked: true,
-                                  )));
-                    },
-                  ),
+                // const SizedBox(
+                //   width: 110,
+                //   child: DeclineButton(),
+                // ),
+                CustomButton(
+                  text: 'Make offer',
+                  size: MediaQuery.of(context).size.width,
+                  onTap: () {
+                    model.acceptRider(context: context, formData: {
+                      'order_reference': orderRef,
+                      'user_id': driverId,
+                    }).then((value) {
+                      if (value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MapScreen(
+                                      driverPicked: true,
+                                    )));
+                      }
+                    });
+                  },
                 ),
               ],
             )
