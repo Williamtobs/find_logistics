@@ -2,7 +2,6 @@ import 'package:find_logistic/src/app/model/auth_model.dart';
 import 'package:find_logistic/src/app/model/user.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
-import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
 import 'package:find_logistic/src/screens/home/home.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupViewModel extends StateNotifier<SignupState> {
   SignupViewModel(this.network)
-      : super(SignupState(user: AuthModel(), appUser: AppUser()));
+      : super(
+            SignupState(user: AuthModel(), appUser: AppUser(wallet: Wallet())));
 
   final Network network;
 
@@ -19,7 +19,7 @@ class SignupViewModel extends StateNotifier<SignupState> {
     state = state.copyWith(isLoading: true);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final response = await network.post(formData: formData, path: 'register');
+      final response = await network.post(formData: formData, path: 'signup');
       var body = response.data;
       print(body);
       if (response.statusCode == 200) {

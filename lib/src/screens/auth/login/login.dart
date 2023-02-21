@@ -28,7 +28,7 @@ class LoginScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Center(
                   child: Image.asset(
@@ -71,8 +71,7 @@ class LoginScreen extends ConsumerWidget {
                   height: 30,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
+                  child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
@@ -96,7 +95,7 @@ class LoginScreen extends ConsumerWidget {
                           child: Column(
                             children: [
                               const SizedBox(
-                                height: 60,
+                                height: 50,
                               ),
                               AppInputField(
                                 hintText: "Email Address",
@@ -167,9 +166,108 @@ class LoginScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+//                     ],
+// =======
+//                   child: SingleChildScrollView(
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.end,
+//                       children: [
+//                         Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           //height: MediaQuery.of(context).size.height * 0.45,
+//                           padding: const EdgeInsets.symmetric(horizontal: 20),
+//                           decoration: BoxDecoration(
+//                             color: whiteColor,
+//                             borderRadius: const BorderRadius.only(
+//                               topRight: Radius.circular(80),
+//                             ),
+//                             boxShadow: [
+//                               BoxShadow(
+//                                 color: Colors.grey.withOpacity(0.2),
+//                                 spreadRadius: 5,
+//                                 blurRadius: 5,
+//                                 offset: const Offset(10, 4),
+//                               ),
+//                             ],
+//                           ),
+//                           child: Column(
+//                             children: [
+//                               const SizedBox(
+//                                 height: 60,
+//                               ),
+//                               AppInputField(
+//                                 hintText: "Email Address",
+//                                 controller: _emailController,
+//                               ),
+//                               const SizedBox(
+//                                 height: 10,
+//                               ),
+//                               AppInputField(
+//                                 hintText: "Password",
+//                                 controller: _passwordController,
+//                                 obscureText: true,
+//                               ),
+//                               const SizedBox(
+//                                 height: 20,
+//                               ),
+//                               CustomButton(
+//                                 text: "Sign In",
+//                                 isLoading: state.isLoading,
+//                                 onTap: () {
+//                                   model.login(
+//                                       email: _emailController.text,
+//                                       password: _passwordController.text,
+//                                       context: context);
+//                                   // Navigator.pushAndRemoveUntil(
+//                                   //     context,
+//                                   //     MaterialPageRoute(builder: (context) => const Home()),
+//                                   //     (route) => false);
+//                                 },
+//                               ),
+//                               const SizedBox(
+//                                 height: 20,
+//                               ),
+//                               Row(
+//                                 mainAxisAlignment: MainAxisAlignment.center,
+//                                 children: [
+//                                   Text('Forgot your password?',
+//                                       style: GoogleFonts.inter(
+//                                         color: primaryColor,
+//                                         fontWeight: FontWeight.w400,
+//                                         fontSize: 14,
+//                                       )),
+//                                   const SizedBox(
+//                                     width: 3,
+//                                   ),
+//                                   InkWell(
+//                                     onTap: () {
+//                                       Navigator.push(
+//                                           context,
+//                                           MaterialPageRoute(
+//                                               builder: (context) =>
+//                                                   ForgotPasswordScreen()));
+//                                     },
+//                                     child: Text(
+//                                       'Reset here',
+//                                       style: GoogleFonts.inter(
+//                                         color: primaryColor,
+//                                         fontWeight: FontWeight.w800,
+//                                         fontSize: 14,
+//                                       ),
+//                                     ),
+//                                   )
+//                                 ],
+//                               ),
+//                               const SizedBox(
+//                                 height: 20,
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+// >>>>>>> ab6746db6e03ad278ba16a4d909526ce0399ac70
+                      ]),
                 )
               ]),
         ),

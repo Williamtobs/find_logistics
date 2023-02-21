@@ -1,6 +1,7 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
+import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,8 +28,9 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     _lastNameController.text = user.user.lastName!;
     _emailController.text = user.user.email!;
     _phoneController.text = user.user.phoneNumber!;
-    return Scaffold(
-      body: Padding(
+    return BaseScreen(
+      title: 'Profile',
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
@@ -37,24 +39,6 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: (() {
-                            Navigator.pop(context);
-                          }),
-                          child: const Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -108,7 +92,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text('Phone',
+                    Text('Phone number',
                         style: GoogleFonts.inter(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

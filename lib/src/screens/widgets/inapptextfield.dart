@@ -6,11 +6,13 @@ class InAppInputField extends StatelessWidget {
   final String hintText, title;
   final IconData? icon;
   final TextEditingController? controller;
+  final bool enabled;
   const InAppInputField({
     Key? key,
     required this.hintText,
     this.controller,
     required this.title,
+    this.enabled = true,
     this.icon,
   }) : super(key: key);
 
@@ -54,6 +56,7 @@ class InAppInputField extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: controller,
+                  enabled: enabled,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,

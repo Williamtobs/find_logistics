@@ -1,9 +1,11 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/home/screens/order/pick_up.dart';
+import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
+
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/inapptextfield.dart';
-import 'package:find_logistic/src/screens/widgets/textfield.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,11 +20,24 @@ class OrderDispatch extends ConsumerStatefulWidget {
 class _OrderDispatchState extends ConsumerState<OrderDispatch> {
   final TextEditingController _controller = TextEditingController();
 
-  String dispatchDay = '';
-  String paymentMethod = '';
+  int? dispatchDay;
+  int? paymentMethod;
+  final TextEditingController _deliveryAddress = TextEditingController();
+  final TextEditingController _receiverName = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(orderProvider.notifier).getPaymentMethods();
+    ref.read(orderProvider.notifier).getDeliveryMethods();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final model = ref.read(pickUpProvider.notifier);
+    final state = ref.watch(pickUpProvider);
+    final orderState = ref.watch(orderProvider);
+    // final orderModel = ref.read(orderProvider.notifier);
     return BaseScreen(
       title: 'Order a dispatcher',
       child: Padding(
@@ -37,10 +52,29 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               controller: _controller,
             ),
             const SizedBox(height: 15),
-            const InAppInputField(
-              title: 'Delivery Point 1',
-              hintText: 'Enter delivery details',
-              // controller: _controller,
+            InAppInputField(
+              title: 'Receiver\'s Name',
+              hintText: 'Enter receiver name',
+              controller: _receiverName,
+            ),
+            const SizedBox(height: 15),
+            InkWell(
+              onTap: () {
+                AddressSearch().addressFieldTap(context: context).then((value) {
+                  if (value != null) {
+                    model.placesDetailsResponse = value;
+                    _deliveryAddress.text = value.formattedAddress;
+                    // print(_deliveryAddress.text);
+                  }
+                });
+              },
+              child: InAppInputField(
+                title: 'Delivery Point 1',
+                hintText: 'Enter delivery address',
+                enabled: false,
+                controller: _deliveryAddress,
+                // controller: _controller,
+              ),
             ),
             const SizedBox(height: 15),
             const InAppInputField(
@@ -48,11 +82,6 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               hintText: '',
               icon: Icons.add,
               // controller: _controller,
-            ),
-            const SizedBox(height: 15),
-            AppInputField(
-              hintText: "Phone Number",
-              controller: _controller,
             ),
             const SizedBox(
               height: 20,
@@ -62,70 +91,45 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: secondaryColor,
               ),
             ),
+            orderState.deliveryMethod.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    children: orderState.deliveryMethod.map((e) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            dispatchDay = e.id;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              dispatchDay != e.id
+                                  ? Icons.radio_button_unchecked
+                                  : Icons.radio_button_checked,
+                              color: primaryColor,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              e.name,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
             const SizedBox(
               height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  dispatchDay = 'same day';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    dispatchDay != 'same day'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Same day delivery',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  dispatchDay = 'next day';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    dispatchDay != 'next day'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Next day delivery',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(
               height: 10,
@@ -135,99 +139,77 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: secondaryColor,
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  paymentMethod = 'e-wallet';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    paymentMethod != 'e-wallet'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
+            orderState.paymentsMethod.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    children: orderState.paymentsMethod.map((e) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentMethod = e.id;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              paymentMethod != e.id
+                                  ? Icons.radio_button_unchecked
+                                  : Icons.radio_button_checked,
+                              color: primaryColor,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              e.name,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'E-wallet',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  paymentMethod = 'cash';
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    paymentMethod != 'cash'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Cash',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(Icons.add, size: 24, color: primaryColor),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Add new payment method',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: primaryColor,
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(
               height: 40,
             ),
             Center(
               child: CustomButton(
                 text: 'Order',
+                isLoading: state.isLoading,
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PickUp()));
+                  if (_deliveryAddress.text.isNotEmpty &&
+                      _controller.text.isNotEmpty &&
+                      _receiverName.text.isNotEmpty &&
+                      dispatchDay != null &&
+                      paymentMethod != null) {
+                    model.getDeliveryLatLong(
+                        context: context,
+                        address: _deliveryAddress.text,
+                        form: {
+                          'pickup_detail': _controller.text,
+                          'order_to_address': _deliveryAddress.text,
+                          "payment_method_id": paymentMethod,
+                          "delivery_type_id": dispatchDay,
+                          "receiver_name": _receiverName.text,
+                          "order_to_lat": model
+                              .placesDetailsResponse!.geometry!.location.lat,
+                          "order_to_long": model
+                              .placesDetailsResponse!.geometry!.location.lng,
+                        });
+                  } else {
+                    BottomSnack.errorSnackBar(
+                        message: 'Enter requires field', context: context);
+                  }
                 },
               ),
             ),

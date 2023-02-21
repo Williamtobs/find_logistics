@@ -1,5 +1,4 @@
-import 'package:find_logistic/src/screens/dashboard/dashboard.dart';
-import 'package:find_logistic/src/screens/home/home.dart';
+import 'package:find_logistic/src/screens/onboarding/startup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,10 +31,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Find Logistic',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      home: widget.token == null ? const OnboardingScreen() : const Home(),
+      home:
+          widget.token == null ? const OnboardingScreen() : const AppStartUp(),
     );
   }
 }

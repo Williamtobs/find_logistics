@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardViewModel extends StateNotifier<DashboardState> {
   DashboardViewModel(this.network)
-      : super(DashboardState(user: AppUser(), isLoading: true));
+      : super(DashboardState(user: AppUser(wallet: Wallet()), isLoading: true));
 
   final Network network;
 

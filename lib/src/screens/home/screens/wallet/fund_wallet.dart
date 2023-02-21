@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:find_logistic/src/app/constant/app_string.dart';
+import 'package:find_logistic/src/screens/home/screens/wallet/webview.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -24,10 +25,6 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
   bool _isLoading = false;
 
   _payWithCard() async {
-    // String accessCode = await ref
-    //     .read(walletProvider.notifier)
-    //     .createAccessCode(_getReference(), int.parse(_amountController.text),
-    //         "akeemtobi6@gmail.com");
     PayWithPayStack().now(
         context: context,
         secretKey: paystackPubKey,
@@ -46,39 +43,89 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
         },
         transactionCompleted: () {
           print("Transaction Successful");
-          initiateTransaction(context: context, status: 1);
+          initiateTransaction(
+            context: context,
+          );
           //ref.read(walletProvider.notifier).verifyOnServer(_getReference());
         },
         transactionNotCompleted: () {
           print("Transaction Not Successful!");
-          initiateTransaction(context: context, status: 0);
+          initiateTransaction(
+            context: context,
+          );
         });
   }
 
-  initiateTransaction(
-      {required BuildContext context, required int status}) async {
+  // initiateTransaction(
+  //     {required BuildContext context, required int status}) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   String email = ref.read(dashboardProvider).user.email!;
+  //   var formData = {
+  //     "amount": _amountController.text,
+  //     "reference": _getReference(),
+  //     'email': email,
+  //     'status': status
+  //   };
+  //   try {
+  //     final response = await ref
+  //         .read(networkProvider)
+  //         .postWithToken(formData: formData, path: 'initiate/topup');
+  //     var body = response.data;
+  //     print(body);
+  //     if (response.statusCode == 200) {
+  //       BottomSnack.successSnackBar(message: body['message'], context: context);
+  //       _payWithCard();
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     } else {
+  //       BottomSnack.errorSnackBar(message: body['message'], context: context);
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     BottomSnack.errorSnackBar(
+  //         message: 'Something went wrong, please try again later',
+  //         context: context);
+  //   }
+  // }
+
+  initiateTransaction({required BuildContext context}) async {
     setState(() {
       _isLoading = true;
     });
     String email = ref.read(dashboardProvider).user.email!;
     var formData = {
       "amount": _amountController.text,
-      "reference": _getReference(),
       'email': email,
-      'status': status
     };
     try {
       final response = await ref
           .read(networkProvider)
-          .postWithToken(formData: formData, path: 'initiate/topup');
+          .postWithToken(formData: formData, path: 'paystack');
       var body = response.data;
-      print(body);
+      print((body['data']['reference']));
       if (response.statusCode == 200) {
-        BottomSnack.successSnackBar(message: body['message'], context: context);
-        _payWithCard();
+        //_payWithCard();
         setState(() {
           _isLoading = false;
         });
+        BottomSnack.successSnackBar(message: body['message'], context: context);
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PayWebView(
+                      url: body['data']['authorization_url'],
+                      reference: body['data']['reference'],
+                    )));
       } else {
         BottomSnack.errorSnackBar(message: body['message'], context: context);
         setState(() {
@@ -177,60 +224,6 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
                             hintText: 'AMOUNT',
                             controller: _amountController,
                           ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const WalletTextField(
-                          //   hintText: 'CARD NUMBER',
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // const WalletTextField(
-                          //   hintText: 'CARD HOLDER NAME',
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'MM',
-                          //       ),
-                          //     ),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'YY',
-                          //       ),
-                          //     ),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //     Expanded(
-                          //       child: const WalletTextField(
-                          //         hintText: 'CVV',
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Switch(
-                          //   value: isSwitched,
-                          //   onChanged: (value) {
-                          //     setState(() {
-                          //       isSwitched = value;
-                          //     });
-                          //   },
-                          //   activeTrackColor: Colors.lightGreenAccent,
-                          //   activeColor: Colors.white,
-                          // ),
                         ],
                       ),
                     )
@@ -241,12 +234,11 @@ class _FundWalletScreenState extends ConsumerState<FundWalletScreen> {
             Center(
               child: CustomButton(
                 text: 'Top up',
+                isLoading: _isLoading,
                 onTap: () {
                   if (_amountController.text.isNotEmpty) {
-                    initiateTransaction(context: context, status: 2);
+                    initiateTransaction(context: context);
                   }
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => PickUp()));
                 },
               ),
             ),

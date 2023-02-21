@@ -45,6 +45,12 @@ dependencies:
   shared_preferences: ^2.0.0-nullsafety
   animated_snack_bar: ^0.3.0
   shimmer: ^2.0.0
+  google_maps_flutter: ^2.2.3
+  location_geocoder: ^1.0.5
+  flutter_polyline_points: ^1.0.0
+  webview_flutter: ^3.0.4
+  flutter_google_places: ^0.3.0
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
