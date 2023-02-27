@@ -36,32 +36,54 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
                   color: primaryColor,
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
+            : history.isEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ListView.builder(
-                          itemCount: history.length,
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: EachTransaction(
-                                time: DateFormat.yMMMEd()
-                                    .format(history[index].createdAt!),
-                                desc: history[index].description,
-                                date: DateFormat.Hm()
-                                    .format(history[index].createdAt!),
-                                amount: history[index].amount.toString(),
-                              ),
-                            );
-                          }),
+                      Center(
+                        child: Image.asset(
+                          'assets/images/history.png',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        'No transaction history yet',
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ));
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ListView.builder(
+                              itemCount: history.length,
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: EachTransaction(
+                                    time: DateFormat.yMMMEd()
+                                        .format(history[index].createdAt!),
+                                    desc: history[index].description,
+                                    date: DateFormat.Hm()
+                                        .format(history[index].createdAt!),
+                                    amount: history[index].amount.toString(),
+                                  ),
+                                );
+                              }),
+                        ],
+                      ),
+                    ),
+                  ));
   }
 }
 
