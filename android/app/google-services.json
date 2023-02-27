@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "913476857764",
+    "project_id": "find-logistics",
+    "storage_bucket": "find-logistics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913476857764:android:f8477051cbdedc2babdb31",
+        "android_client_info": {
+          "package_name": "com.logistic.find_logistic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913476857764-jts5advh98qqip410hrlm43cbatgbs5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuRVGGYvMFAbdhiJX81-ORuX40jVeL5ig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913476857764-jts5advh98qqip410hrlm43cbatgbs5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
