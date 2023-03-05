@@ -1,20 +1,29 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
+import 'package:find_logistic/src/screens/widgets/password_textfield.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends ConsumerWidget {
-  LoginScreen({super.key});
-
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isObscure = true;
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(loginProvider);
     final model = ref.read(loginProvider.notifier);
 
@@ -104,10 +113,15 @@ class LoginScreen extends ConsumerWidget {
                               const SizedBox(
                                 height: 10,
                               ),
-                              AppInputField(
+                              PasswordTextfield(
                                 hintText: "Password",
                                 controller: _passwordController,
-                                obscureText: true,
+                                obscureText: _isObscure,
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                },
                               ),
                               const SizedBox(
                                 height: 20,
