@@ -65,6 +65,7 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
       //   long: long.toString(),
       // );
       // ignore: use_build_context_synchronously
+      state = state.copyWith(isLoading: false);
       Navigator.push(
           context,
           MaterialPageRoute(

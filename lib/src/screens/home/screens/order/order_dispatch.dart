@@ -76,16 +76,14 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 // controller: _controller,
               ),
             ),
-            const SizedBox(height: 15),
-            const InAppInputField(
-              title: 'Add New Delivery Point',
-              hintText: '',
-              icon: Icons.add,
-              // controller: _controller,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            // const SizedBox(height: 15),
+            // const InAppInputField(
+            //   title: 'Add New Delivery Point',
+            //   hintText: '',
+            //   icon: Icons.add,
+            //   // controller: _controller,
+            // ),
+            const SizedBox(height: 20),
             Text(
               'Delivery Type',
               style: GoogleFonts.inter(
@@ -94,6 +92,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 color: secondaryColor,
               ),
             ),
+            const SizedBox(height: 5),
             orderState.deliveryMethod.isEmpty
                 ? const SizedBox.shrink()
                 : Column(

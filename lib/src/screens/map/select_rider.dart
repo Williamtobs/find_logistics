@@ -101,12 +101,13 @@ class SelectRider extends ConsumerWidget {
                     carName: riders[index].firstName,
                     driverName:
                         '${riders[index].firstName} ${riders[index].lastName}',
-                    price: amount.toString(),
+                    price: riders[index].driversPrice,
                     orderRef: orderRef,
                     driverId: riders[index].id,
                     data: riders[index],
                     address: address,
                     addressTo: addressTo,
+                    img: riders[index].image,
                   ),
                 );
               })),
@@ -150,11 +151,13 @@ class EachDriver extends ConsumerWidget {
   final String carName, driverName, price, orderRef;
   final int driverId;
   final String address, addressTo;
+  final String? img;
   final NegotiateOrderModel data;
   const EachDriver(
       {super.key,
       required this.carName,
       required this.driverName,
+      this.img,
       required this.orderRef,
       required this.data,
       required this.driverId,
@@ -182,11 +185,21 @@ class EachDriver extends ConsumerWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/images/rider_img.png',
+                SizedBox(
                   width: 40,
                   height: 40,
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage:
+                        AssetImage(img ?? 'assets/images/rider.png'),
+                    backgroundColor: Colors.white,
+                  ),
                 ),
+                // Image.asset(
+                //   'assets/images/rider_img.png',
+                //   width: 40,
+                //   height: 40,
+                // ),
                 const SizedBox(
                   width: 10,
                 ),

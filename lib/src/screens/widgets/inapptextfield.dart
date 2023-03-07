@@ -57,6 +57,7 @@ class InAppInputField extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   enabled: enabled,
+                  textCapitalization: TextCapitalization.sentences,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,

@@ -1,5 +1,6 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
@@ -27,7 +28,10 @@ class CustomButton extends StatelessWidget {
         ),
         child: Center(
           child: isLoading == true
-              ? const CircularProgressIndicator()
+              ? const SpinKitCircle(
+                  color: Colors.white,
+                  size: 35,
+                )
               : Text(
                   text,
                   style: GoogleFonts.inter(
