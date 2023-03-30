@@ -21,7 +21,6 @@ class SelectRider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapProvider);
-    final model = ref.read(mapProvider.notifier);
     List<NegotiateOrderModel> riders = state.negotiateOrders;
     return Scaffold(
       body: Column(
