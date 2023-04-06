@@ -1,7 +1,9 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup.dart';
+import 'package:find_logistic/src/screens/auth/widgets/auth_background.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
 import 'package:find_logistic/src/screens/widgets/password_textfield.dart';
+import 'package:find_logistic/src/screens/widgets/shared_textfield.dart';
 import 'package:find_logistic/src/screens/widgets/textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:find_logistic/src/utils/validations.dart';
@@ -17,7 +19,7 @@ class RiderSignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _RiderSignUpScreenState extends ConsumerState<RiderSignUpScreen> {
-  String _countryCode = '234';
+  String countryCode = '234';
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -38,7 +40,6 @@ class _RiderSignUpScreenState extends ConsumerState<RiderSignUpScreen> {
     final model = ref.read(registerProvider.notifier);
 
     return Scaffold(
-      backgroundColor: tertiaryColor,
       body: Form(
         key: _formKey,
         onChanged: () {
@@ -51,134 +52,211 @@ class _RiderSignUpScreenState extends ConsumerState<RiderSignUpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const SizedBox(
-                height: 60,
-              ),
-              Center(
-                child: Image.asset(
-                  'assets/images/find_logo.png',
-                  height: 55,
-                  width: 73,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.85,
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(80),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 5,
-                      offset: const Offset(10, 4),
+              const SizedBox(height: 50),
+              SizedBox(
+                height: 100,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Image.asset(
+                        'assets/images/cloud2.png',
+                        height: 38,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Material(
+                          elevation: 5,
+                          shape: const CircleBorder(),
+                          child: Container(
+                            width: 45,
+                            height: 45,
+                            decoration: const BoxDecoration(
+                              color: Color.fromRGBO(45, 95, 46, 1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/find_logo.png',
+                        height: 55,
+                        width: 73,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Image.asset(
+                        'assets/images/cloud1.png',
+                        height: 38,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ],
                 ),
-                child: SingleChildScrollView(
+              ),
+              Text("Sign up as Rider",
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                    color: primaryColor,
+                  )),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AuthBackground(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Text("Sign up as Rider",
+                      Text('First Name',
                           style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 24,
-                            color: primaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
                           )),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      AppInputField(
-                        hintText: "First Name",
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _firstNameController,
+                        isPassword: false,
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      AppInputField(
-                        hintText: "Last Name",
+                      const SizedBox(height: 10),
+                      Text('Last Name',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
+                          )),
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _lastNameController,
+                        isPassword: false,
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      AppInputField(
-                        hintText: "Email Address",
+                      const SizedBox(height: 10),
+                      Text('Email Address',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
+                          )),
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _emailController,
+                        isPassword: false,
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      AppInputField(
-                        hintText: "Phone Number",
+                      const SizedBox(height: 10),
+                      Text('Phone Number',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
+                          )),
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _phoneController,
+                        isPassword: false,
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      AppInputField(
-                        hintText: "Plate Number",
+                      const SizedBox(height: 10),
+                      Text('Plate Number',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
+                          )),
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _plateController,
+                        isPassword: false,
                       ),
-                      const SizedBox(
-                        height: 10,
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text('Password',
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromRGBO(45, 95, 46, 1),
+                              )),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                                '(must contain an uppercase, special character & 8 characters long)',
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromRGBO(45, 95, 46, 1),
+                                )),
+                          ),
+                        ],
                       ),
-                      PasswordTextfield(
-                        hintText: "Password",
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _passwordController,
+                        isPassword: true,
                         obscureText: _isObscure,
-                        validator: Validators.validatePassword(),
                         onPressed: () {
                           setState(() {
                             _isObscure = !_isObscure;
                           });
                         },
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      PasswordTextfield(
-                        hintText: "Confirm Password",
+                      const SizedBox(height: 10),
+                      Text('Confirm Password',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(45, 95, 46, 1),
+                          )),
+                      const SizedBox(height: 8),
+                      SharedField(
                         controller: _confirmPasswordController,
+                        isPassword: true,
                         obscureText: _isObscure2,
-                        validator: Validators.validatePassword(),
                         onPressed: () {
                           setState(() {
                             _isObscure2 = !_isObscure2;
                           });
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomButton(
-                        text: "Sign Up",
-                        isLoading: state.isLoading,
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            model.register(context: context, formData: {
-                              'first_name': _firstNameController.text,
-                              'last_name': _lastNameController.text,
-                              'email': _emailController.text,
-                              'phone_number':
-                                  '$_countryCode${_phoneController.text}',
-                              'plate_number': _plateController.text,
-                              "user_type": "driver",
-                              'password': _passwordController.text,
-                              'password_confirmation':
-                                  _confirmPasswordController.text,
-                            });
-                          }
-                        },
+                      const SizedBox(height: 15),
+                      Center(
+                        child: CustomButton(
+                          text: "Sign Up",
+                          isLoading: state.isLoading,
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              model.register(context: context, formData: {
+                                'first_name': _firstNameController.text,
+                                'last_name': _lastNameController.text,
+                                'email': _emailController.text,
+                                'phone_number':
+                                    '$countryCode${_phoneController.text}',
+                                'plate_number': _plateController.text,
+                                "user_type": "driver",
+                                'password': _passwordController.text,
+                                'password_confirmation':
+                                    _confirmPasswordController.text,
+                              });
+                            }
+                          },
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -212,13 +290,10 @@ class _RiderSignUpScreenState extends ConsumerState<RiderSignUpScreen> {
                           )
                         ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

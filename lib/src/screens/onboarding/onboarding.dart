@@ -77,20 +77,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          // AnimatedSmoothIndicator(
-          //   activeIndex: _index,
-          //   count: 3,
-          //   effect: ExpandingDotsEffect(
-          //     dotHeight: 10,
-          //     dotWidth: 10,
-          //     spacing: 5,
-          //     activeDotColor: primaryColor,
-          //     dotColor: secondaryColor,
-          //   ),
-          // ),
           const SizedBox(
             height: 30,
           ),
@@ -119,47 +105,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(
             height: 20,
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(
-          //     horizontal: 20,
-          //     vertical: 10,
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       // InkWell(
-          //       //   onTap: () {
-          //       //     Navigator.push(
-          //       //         context,
-          //       //         MaterialPageRoute(
-          //       //             builder: (context) => const UserSelectMode()));
-          //       //   },
-          //       //   child: Text('SKIP',
-          //       //       style: GoogleFonts.poppins(
-          //       //           color: primaryColor,
-          //       //           fontSize: 16,
-          //       //           fontWeight: FontWeight.w500)),
-          //       // ),
-          //       InkWell(
-          //         onTap: () {
-          //           _index == 2
-          //               ? Navigator.push(
-          //                   context,
-          //                   MaterialPageRoute(
-          //                       builder: (context) => const UserSelectMode()))
-          //               : _pageController.nextPage(
-          //                   duration: const Duration(milliseconds: 800),
-          //                   curve: Curves.ease);
-          //         },
-          //         child: Text('NEXT',
-          //             style: GoogleFonts.poppins(
-          //                 color: primaryColor,
-          //                 fontSize: 16,
-          //                 fontWeight: FontWeight.w500)),
-          //       ),
-          //     ],
-          //   ),
-          // )
         ],
       ),
     );
