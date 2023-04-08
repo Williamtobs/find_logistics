@@ -2,8 +2,6 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../screens/wallet/fund_wallet.dart';
-
 class BalanceBox extends StatelessWidget {
   final String balance;
 
@@ -19,8 +17,10 @@ class BalanceBox extends StatelessWidget {
       height: 146,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [primaryColor, const Color.fromRGBO(153, 186, 102, 1)]),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/balance_bg.png'),
+          fit: BoxFit.cover,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
