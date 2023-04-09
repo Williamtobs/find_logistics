@@ -5,6 +5,8 @@ import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
+// ignore: depend_on_referenced_packages
+import 'package:google_maps_webservice/places.dart' as places;
 
 class ProfileViewModel extends StateNotifier<ProfileState> {
   ProfileViewModel(this.network, this.ref)
@@ -12,6 +14,8 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
 
   final Network network;
   final Ref ref;
+
+  places.PlaceDetails? placesDetailsResponse;
 
   updateProfile({required BuildContext context, required var formData}) async {
     try {
@@ -22,6 +26,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       if (response.statusCode == 200) {
         BottomSnack.successSnackBar(message: body['message'], context: context);
         ref.read(dashboardProvider.notifier).getProfile(context: context);
+        state = state.copyWith(isLoading: false);
         if (!mounted) return;
         Navigator.pushAndRemoveUntil(
             context,

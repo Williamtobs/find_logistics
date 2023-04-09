@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
@@ -19,6 +20,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _plateNumberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(dashboardProvider);
@@ -28,6 +31,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     _lastNameController.text = user.user.lastName!;
     _emailController.text = user.user.email!;
     _phoneController.text = user.user.phoneNumber!;
+    _plateNumberController.text = user.user.plateNumber ?? '';
+    _addressController.text = user.user.address ?? '';
     return BaseScreen(
       title: 'Profile',
       child: Padding(
@@ -89,9 +94,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         controller: _emailController,
                         enabled: false,
                         color: Colors.black),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Text('Phone number',
                         style: GoogleFonts.inter(
                           fontSize: 16,
@@ -105,6 +108,55 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         hintText: 'Phone Number',
                         controller: _phoneController,
                         color: Colors.black),
+                    user.user.userType == 'driver'
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              Text('Plate Number',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              AppTextField(
+                                  hintText: 'Plate number',
+                                  controller: _plateNumberController,
+                                  color: Colors.black)
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 20),
+                    Text('Address',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        )),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        AddressSearch()
+                            .addressFieldTap(context: context)
+                            .then((value) {
+                          if (value != null) {
+                            model.placesDetailsResponse = value;
+                            _addressController.text = value.formattedAddress;
+                          }
+                        });
+                      },
+                      child: AppTextField(
+                        hintText: 'Address',
+                        controller: _addressController,
+                        color: Colors.black,
+                        enabled: false,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -117,14 +169,34 @@ class _UserProfileState extends ConsumerState<UserProfile> {
               color: primaryColor,
               isLoading: state.isLoading,
               onPressed: () {
-                model.updateProfile(
-                  context: context,
-                  formData: {
-                    'first_name': _firstNameController.text,
-                    'last_name': _lastNameController.text,
-                    'phone_number': _phoneController.text,
-                  },
-                );
+                user.user.userType != 'driver'
+                    ? model.updateProfile(
+                        context: context,
+                        formData: {
+                          'first_name': _firstNameController.text,
+                          'last_name': _lastNameController.text,
+                          'phone_number': _phoneController.text,
+                          'address': _addressController.text,
+                          'latitude': model
+                              .placesDetailsResponse!.geometry!.location.lat,
+                          'longitude': model
+                              .placesDetailsResponse!.geometry!.location.lng,
+                        },
+                      )
+                    : model.updateProfile(
+                        context: context,
+                        formData: {
+                          'first_name': _firstNameController.text,
+                          'last_name': _lastNameController.text,
+                          'phone_number': _phoneController.text,
+                          'plate_number': _plateNumberController.text,
+                          'address': _addressController.text,
+                          'latitude': model
+                              .placesDetailsResponse!.geometry!.location.lat,
+                          'longitude': model
+                              .placesDetailsResponse!.geometry!.location.lng,
+                        },
+                      );
               },
             ),
             const SizedBox(
