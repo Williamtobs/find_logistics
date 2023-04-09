@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class SharedField extends StatelessWidget {
   final TextEditingController controller;
   final bool? obscureText, enabled, isPassword;
+  final String? hint;
   final Function()? onPressed;
   const SharedField(
       {super.key,
@@ -11,7 +12,8 @@ class SharedField extends StatelessWidget {
       this.obscureText,
       this.enabled,
       this.isPassword = false,
-      this.onPressed});
+      this.onPressed,
+      this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,11 @@ class SharedField extends StatelessWidget {
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
+          hintText: hint,
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
           suffixIcon: isPassword!
               ? InkWell(
                   onTap: onPressed,

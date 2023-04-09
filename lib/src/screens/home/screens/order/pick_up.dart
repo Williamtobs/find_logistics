@@ -1,12 +1,16 @@
+import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/auth/widgets/auth_background.dart';
 import 'package:find_logistic/src/screens/map/map.dart';
 import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
-import 'package:find_logistic/src/screens/widgets/textfield.dart';
+import 'package:find_logistic/src/screens/widgets/shared_textfield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' show cos, sqrt, asin;
+
+import 'package:google_fonts/google_fonts.dart';
 
 class PickUp extends ConsumerStatefulWidget {
   final String deliveryAddress;
@@ -47,43 +51,89 @@ class _PickUpState extends ConsumerState<PickUp> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              AppInputField(
-                hintText: "Sender's Name",
-                controller: _controller,
-              ),
-              const SizedBox(height: 10),
-              AppInputField(
-                hintText: "Pickup Phone Number",
-                controller: _pickUpNumber,
-              ),
-              const SizedBox(height: 10),
-              InkWell(
-                onTap: () {
-                  AddressSearch()
-                      .addressFieldTap(context: context)
-                      .then((value) {
-                    if (value != null) {
-                      model.pickUpDetailsResponse = value;
-                      _pickUpAddress.text = value.formattedAddress;
-                      // print(_deliveryAddress.text);
-                    }
-                  });
-                },
-                child: AppInputField(
-                  hintText: "Pickup Address",
-                  controller: _pickUpAddress,
-                  enabled: false,
+              AuthBackground(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text('Sender\'s Name',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _controller,
+                      isPassword: false,
+                      hint: 'Enter sender\'s name',
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Pickup Phone Number',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _pickUpNumber,
+                      isPassword: false,
+                      hint: 'Enter pickup phone',
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Pickup Address',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        AddressSearch()
+                            .addressFieldTap(context: context)
+                            .then((value) {
+                          if (value != null) {
+                            model.pickUpDetailsResponse = value;
+                            _pickUpAddress.text = value.formattedAddress;
+                            // print(_deliveryAddress.text);
+                          }
+                        });
+                      },
+                      child: SharedField(
+                        controller: _pickUpAddress,
+                        isPassword: false,
+                        hint: 'Enter pickup address',
+                        enabled: false,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Area',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _areaController,
+                      isPassword: false,
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Closest Landmark',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _landmarkController,
+                      isPassword: false,
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 10),
-              AppInputField(
-                hintText: "Area",
-                controller: _areaController,
-              ),
-              const SizedBox(height: 10),
-              AppInputField(
-                hintText: "Closest Landmark",
-                controller: _landmarkController,
               ),
               const SizedBox(height: 40),
               Center(
@@ -149,7 +199,6 @@ class _PickUpState extends ConsumerState<PickUp> {
         c((lat2 - lat1) * p) / 2 +
         c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     double distanceInMeters = 12742 * asin(sqrt(a));
-    print(distanceInMeters);
     return distanceInMeters * 1000;
   }
 }
