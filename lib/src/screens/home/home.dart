@@ -40,7 +40,7 @@ class _HomeState extends ConsumerState<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 50,
+              height: 60,
             ),
             state.isLoading != true
                 ? Text('Hello ${state.user.firstName}',
@@ -61,10 +61,11 @@ class _HomeState extends ConsumerState<Home> {
               height: 5,
             ),
             BalanceBox(
-                balance: (state.user.wallet.availableBalance!).toString()),
-            const SizedBox(
-              height: 50,
+              balance: state.user.wallet.availableBalance != null
+                  ? (state.user.wallet.availableBalance!).toString()
+                  : '0',
             ),
+            const SizedBox(height: 40),
             Container(
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -201,7 +202,6 @@ class EachActivities extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 47,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),

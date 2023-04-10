@@ -1,4 +1,5 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/home/screens/transaction_history/transaction_history.dart';
 import 'package:find_logistic/src/screens/home/screens/wallet/fund_wallet.dart';
 import 'package:find_logistic/src/screens/home/widgets/balance.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
@@ -33,7 +34,15 @@ class WalletScreen extends ConsumerWidget {
                   child: const EachRow(
                       title: 'Deposit', icon: Icons.payments_outlined)),
               const SizedBox(height: 20),
-              const EachRow(title: 'Transaction History', icon: Icons.history),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TransactionHistory()));
+                  },
+                  child: const EachRow(
+                      title: 'Transaction History', icon: Icons.history)),
               const SizedBox(height: 20),
               const EachRow(title: 'Payment Settings', icon: Icons.credit_card),
             ],

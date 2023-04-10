@@ -1,9 +1,10 @@
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/auth/widgets/auth_background.dart';
 import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
 
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
-import 'package:find_logistic/src/screens/widgets/inapptextfield.dart';
+import 'package:find_logistic/src/screens/widgets/shared_textfield.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
   final TextEditingController _deliveryAddress = TextEditingController();
   final TextEditingController _receiverName = TextEditingController();
 
+  bool addressValue = false;
+  List addressList = [];
+
   @override
   void initState() {
     super.initState();
@@ -34,9 +38,15 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(dashboardProvider);
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(pickUpProvider);
     final orderState = ref.watch(orderProvider);
+
+    getAddress(address) async {
+      addressList = await model.getLatLong(address: address);
+    }
+
     // final orderModel = ref.read(orderProvider.notifier);
     return BaseScreen(
       title: 'Order a dispatcher',
@@ -46,46 +56,126 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(height: 30),
-            InAppInputField(
-              title: 'Pickup',
-              hintText: 'Enter pickup details',
-              controller: _controller,
+            AuthBackground(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          'Use current address',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: primaryColor,
+                          ),
+                        ),
+                        const Spacer(),
+                        Switch(
+                            value: addressValue,
+                            activeTrackColor: Colors.lightGreenAccent,
+                            activeColor: primaryColor,
+                            onChanged: (value) {
+                              setState(() {
+                                addressValue = value;
+                                if (addressValue) {
+                                  _deliveryAddress.text = user.user.address;
+                                  getAddress(user.user.address);
+                                } else {
+                                  _deliveryAddress.text = '';
+                                }
+                              });
+                            })
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text('Pick Details',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _controller,
+                      isPassword: false,
+                      hint: 'Enter pickup details',
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Receiver\'s Name',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    SharedField(
+                      controller: _receiverName,
+                      isPassword: false,
+                      hint: 'Enter receiver name',
+                    ),
+                    const SizedBox(height: 15),
+                    Text('Delivery Point',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: primaryColor,
+                        )),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        AddressSearch()
+                            .addressFieldTap(context: context)
+                            .then((value) {
+                          if (value != null) {
+                            model.placesDetailsResponse = value;
+                            _deliveryAddress.text = value.formattedAddress;
+                          }
+                        });
+                      },
+                      child: SharedField(
+                        controller: _deliveryAddress,
+                        isPassword: false,
+                        hint: 'Enter delivery address',
+                        enabled: false,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ]),
             ),
-            const SizedBox(height: 15),
-            InAppInputField(
-              title: 'Receiver\'s Name',
-              hintText: 'Enter receiver name',
-              controller: _receiverName,
-            ),
-            const SizedBox(height: 15),
-            InkWell(
-              onTap: () {
-                AddressSearch().addressFieldTap(context: context).then((value) {
-                  if (value != null) {
-                    model.placesDetailsResponse = value;
-                    _deliveryAddress.text = value.formattedAddress;
-                    // print(_deliveryAddress.text);
-                  }
-                });
-              },
-              child: InAppInputField(
-                title: 'Delivery Point 1',
-                hintText: 'Enter delivery address',
-                enabled: false,
-                controller: _deliveryAddress,
-                // controller: _controller,
-              ),
-            ),
-            const SizedBox(height: 15),
-            const InAppInputField(
-              title: 'Add New Delivery Point',
-              hintText: '',
-              icon: Icons.add,
-              // controller: _controller,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            // InAppInputField(
+            //   title: 'Pickup',
+            //   hintText: 'Enter pickup details',
+            //   controller: _controller,
+            // ),
+            // const SizedBox(height: 15),
+            // InkWell(
+            //   onTap: () {
+            //     AddressSearch().addressFieldTap(context: context).then((value) {
+            //       if (value != null) {
+            //         model.placesDetailsResponse = value;
+            //         _deliveryAddress.text = value.formattedAddress;
+            //         // print(_deliveryAddress.text);
+            //       }
+            //     });
+            //   },
+            //   child: InAppInputField(
+            //     title: 'Delivery Point 1',
+            //     hintText: 'Enter delivery address',
+            //     enabled: false,
+            //     controller: _deliveryAddress,
+            //     // controller: _controller,
+            //   ),
+            // ),
+            // const SizedBox(height: 15),
+            // const InAppInputField(
+            //   title: 'Add New Delivery Point',
+            //   hintText: '',
+            //   icon: Icons.add,
+            //   // controller: _controller,
+            // ),
+            const SizedBox(height: 20),
             Text(
               'Delivery Type',
               style: GoogleFonts.inter(
@@ -94,6 +184,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                 color: secondaryColor,
               ),
             ),
+            const SizedBox(height: 5),
             orderState.deliveryMethod.isEmpty
                 ? const SizedBox.shrink()
                 : Column(
@@ -201,10 +292,14 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                           "payment_method_id": paymentMethod,
                           "delivery_type_id": dispatchDay,
                           "receiver_name": _receiverName.text,
-                          "order_to_lat": model
-                              .placesDetailsResponse!.geometry!.location.lat,
-                          "order_to_long": model
-                              .placesDetailsResponse!.geometry!.location.lng,
+                          "order_to_lat": addressValue == false
+                              ? model
+                                  .placesDetailsResponse!.geometry!.location.lat
+                              : addressList[0],
+                          "order_to_long": addressValue == false
+                              ? model
+                                  .placesDetailsResponse!.geometry!.location.lng
+                              : addressList[1],
                         });
                   } else {
                     BottomSnack.errorSnackBar(

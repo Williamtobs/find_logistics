@@ -37,6 +37,7 @@ class MapViewModel extends StateNotifier<MapState> {
       final response = await _network.postWithToken(
           path: 'negotiate/order', formData: formData);
       var body = response.data;
+      print(body);
       if (response.statusCode == 200) {
         if (body['status'] == true) {
           state = state.copyWith(
@@ -52,8 +53,7 @@ class MapViewModel extends StateNotifier<MapState> {
         }
       } else {
         state = state.copyWith(isLoading: false);
-        BottomSnack.errorSnackBar(
-            message: 'Something went wrong', context: context);
+        BottomSnack.errorSnackBar(message: body['message'], context: context);
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);

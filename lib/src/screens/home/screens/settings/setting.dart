@@ -7,11 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Setting extends ConsumerWidget {
+class Setting extends ConsumerStatefulWidget {
   const Setting({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends ConsumerState<Setting> {
+  bool isSwitched = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(dashboardProvider);
     return BaseScreen(
       title: 'Settings',
       child: Padding(
@@ -82,6 +90,45 @@ class Setting extends ConsumerWidget {
                     icon: Icons.description_outlined,
                     title: 'Terms and Conditions',
                   ),
+                  const SizedBox(height: 20),
+                  user.user.userType == 'driver'
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 56,
+                          color: whiteColor,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.power_settings_new,
+                                size: 22,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Availability',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: primaryColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+                                  });
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: primaryColor,
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
