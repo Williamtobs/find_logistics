@@ -19,6 +19,7 @@ class _SettingState extends ConsumerState<Setting> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(dashboardProvider);
     return BaseScreen(
       title: 'Settings',
       child: Padding(
@@ -90,43 +91,44 @@ class _SettingState extends ConsumerState<Setting> {
                     title: 'Terms and Conditions',
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 56,
-                    color: whiteColor,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.power_settings_new,
-                          size: 22,
-                          color: primaryColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Availability',
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: primaryColor,
+                  user.user.userType == 'driver'
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 56,
+                          color: whiteColor,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.power_settings_new,
+                                size: 22,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Availability',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: primaryColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+                                  });
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: primaryColor,
+                              ),
+                            ],
                           ),
-                        ),
-                        const Spacer(),
-                        Switch(
-                          value: isSwitched,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched = value;
-                              print(isSwitched);
-                            });
-                          },
-                          activeTrackColor: Colors.lightGreenAccent,
-                          activeColor: primaryColor,
-                        ),
-                      ],
-                    ),
-                  )
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

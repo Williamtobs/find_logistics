@@ -4,7 +4,6 @@ import 'package:find_logistic/src/screens/widgets/address_search_field.dart';
 
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
-import 'package:find_logistic/src/screens/widgets/inapptextfield.dart';
 import 'package:find_logistic/src/screens/widgets/shared_textfield.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -28,6 +27,7 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
   final TextEditingController _receiverName = TextEditingController();
 
   bool addressValue = false;
+  List addressList = [];
 
   @override
   void initState() {
@@ -38,9 +38,15 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(dashboardProvider);
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(pickUpProvider);
     final orderState = ref.watch(orderProvider);
+
+    getAddress(address) async {
+      addressList = await model.getLatLong(address: address);
+    }
+
     // final orderModel = ref.read(orderProvider.notifier);
     return BaseScreen(
       title: 'Order a dispatcher',
@@ -54,27 +60,35 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //const SizedBox(height: 20),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       'Use current address',
-                    //       style: GoogleFonts.inter(
-                    //         fontWeight: FontWeight.w500,
-                    //         fontSize: 12,
-                    //         color: primaryColor,
-                    //       ),
-                    //     ),
-                    //     const Spacer(),
-                    //     Switch(
-                    //         value: addressValue,
-                    //         onChanged: (value) {
-                    //           setState(() {
-                    //             addressValue = value;
-                    //           });
-                    //         })
-                    //   ],
-                    // ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          'Use current address',
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: primaryColor,
+                          ),
+                        ),
+                        const Spacer(),
+                        Switch(
+                            value: addressValue,
+                            activeTrackColor: Colors.lightGreenAccent,
+                            activeColor: primaryColor,
+                            onChanged: (value) {
+                              setState(() {
+                                addressValue = value;
+                                if (addressValue) {
+                                  _deliveryAddress.text = user.user.address;
+                                  getAddress(user.user.address);
+                                } else {
+                                  _deliveryAddress.text = '';
+                                }
+                              });
+                            })
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     Text('Pick Details',
                         style: GoogleFonts.inter(
@@ -278,10 +292,14 @@ class _OrderDispatchState extends ConsumerState<OrderDispatch> {
                           "payment_method_id": paymentMethod,
                           "delivery_type_id": dispatchDay,
                           "receiver_name": _receiverName.text,
-                          "order_to_lat": model
-                              .placesDetailsResponse!.geometry!.location.lat,
-                          "order_to_long": model
-                              .placesDetailsResponse!.geometry!.location.lng,
+                          "order_to_lat": addressValue == false
+                              ? model
+                                  .placesDetailsResponse!.geometry!.location.lat
+                              : addressList[0],
+                          "order_to_long": addressValue == false
+                              ? model
+                                  .placesDetailsResponse!.geometry!.location.lng
+                              : addressList[1],
                         });
                   } else {
                     BottomSnack.errorSnackBar(

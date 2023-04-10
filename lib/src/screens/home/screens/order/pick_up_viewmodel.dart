@@ -49,6 +49,13 @@ class PickUpViewModel extends StateNotifier<PickUpState> {
     polylines[id] = polyline;
   }
 
+  Future<List<double>> getLatLong({required String address}) async {
+    final location = await geocoder.findAddressesFromQuery(address);
+    var lat = location.first.coordinates.latitude;
+    var long = location.first.coordinates.longitude;
+    return [lat!, long!];
+  }
+
   getDeliveryLatLong(
       {required BuildContext context,
       required String address,
