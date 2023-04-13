@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/driver_order/order_request.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/setting.dart';
 import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart';
@@ -20,11 +23,36 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
+  Timer? _timer;
+  int _start = 15;
+
   @override
   void initState() {
     super.initState();
     ref.read(dashboardProvider.notifier).getProfile(context: context);
     ref.read(homeProvider.notifier).fetchRecentActivities();
+    initTimer();
+  }
+
+  initTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_start < 1) {
+          _start = 15;
+          if (ref.watch(dashboardProvider).user.userType == 'driver') {
+            ref.read(homeProvider.notifier).getOrders();
+          }
+        } else {
+          _start = _start - 1;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -81,10 +109,15 @@ class _HomeState extends ConsumerState<Home> {
                       //OrderDispatch
                       InkWell(
                         onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const OrderDispatch()));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const OrderDispatch()));
+                                  builder: (context) =>
+                                      const DriverOrderRequest()));
                         },
                         child: const Options(
                           title: 'Order a Dispatch',
@@ -96,10 +129,15 @@ class _HomeState extends ConsumerState<Home> {
                       ),
                       InkWell(
                         onTap: () {
+                          _timer?.cancel();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const WalletScreen()));
+                          if (ref.watch(dashboardProvider).user.userType ==
+                              'driver') {
+                            initTimer();
+                          }
                         },
                         child: const Options(
                           title: 'Wallet',
