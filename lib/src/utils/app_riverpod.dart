@@ -4,6 +4,7 @@ import 'package:find_logistic/src/app/service/network/network_impl.dart';
 import 'package:find_logistic/src/screens/auth/login/login_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/signup_viewmodel.dart';
 import 'package:find_logistic/src/screens/auth/forgot_password/forgot_password_viewmodel.dart';
+import 'package:find_logistic/src/screens/driver_order/driver_map.view_model.dart';
 import 'package:find_logistic/src/screens/home/dashboard_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/home_viewmodel.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch_viewmodel.dart';
@@ -72,4 +73,9 @@ final transactionHistory =
 
 final mapProvider = StateNotifierProvider<MapViewModel, MapState>((ref) {
   return MapViewModel(ref.read(networkProvider));
+});
+
+final driverMapProvider =
+    StateNotifierProvider<DriverMapViewModel, DriverMapState>((ref) {
+  return DriverMapViewModel(ref.read(networkProvider));
 });
