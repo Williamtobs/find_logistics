@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'screens/percentage_negotiation/percentage_negotiation.dart';
+
 class Setting extends ConsumerStatefulWidget {
   const Setting({super.key});
 
@@ -164,6 +166,22 @@ class _SettingState extends ConsumerState<Setting> {
                                 activeColor: primaryColor,
                               ),
                             ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 20),
+                  user.user.userType == 'driver'
+                      ? InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PercentageNegotiation()));
+                          },
+                          child: const EachOption(
+                            icon: Icons.percent,
+                            title: 'Percentage Negotiation',
                           ),
                         )
                       : const SizedBox.shrink(),

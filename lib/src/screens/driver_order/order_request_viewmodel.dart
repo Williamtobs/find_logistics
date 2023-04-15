@@ -38,6 +38,33 @@ class OrderRequestViewModel extends StateNotifier<OrderRequestState> {
     }
   }
 
+  Future<bool> cancelOrder(
+      {required BuildContext context, required String orderRef}) async {
+    try {
+      final response = await _network.postWithToken(
+          path: 'order/end', formData: {'order_reference': orderRef});
+      var body = response.data;
+      print(body);
+      if (response.statusCode == 200) {
+        if (body['status'] == true) {
+          BottomSnack.successSnackBar(
+              message: body['message'], context: context);
+          return true;
+        } else {
+          BottomSnack.errorSnackBar(message: body['message'], context: context);
+          return false;
+        }
+      } else {
+        BottomSnack.errorSnackBar(message: body['message'], context: context);
+        return false;
+      }
+    } catch (e) {
+      BottomSnack.errorSnackBar(
+          message: 'Something went wrong', context: context);
+    }
+    return false;
+  }
+
   orderDetails(
       {required BuildContext context, required String orderRef}) async {
     state = state.copyWith(isLoading: true);

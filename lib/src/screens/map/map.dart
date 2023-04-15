@@ -297,40 +297,12 @@ class _SeledtedDriverState extends ConsumerState<SeledtedDriver> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(
-                                Icons.star_border_outlined,
-                                color: Color.fromRGBO(153, 186, 102, 1),
-                                size: 16,
-                              ),
-                              Icon(
-                                Icons.star_border_outlined,
-                                color: Color.fromRGBO(153, 186, 102, 1),
-                                size: 16,
-                              ),
-                              Icon(
-                                Icons.star_border_outlined,
-                                color: Color.fromRGBO(153, 186, 102, 1),
-                                size: 16,
-                              ),
-                              Icon(
-                                Icons.star_border_outlined,
-                                color: Color.fromRGBO(0, 0, 0, 0.15),
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
                           Text(
-                            'Rating from 94 completed rides',
+                            widget.data.plateNumber.toUpperCase(),
                             style: GoogleFonts.inter(
                               color: Colors.black,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(
@@ -376,7 +348,7 @@ class _SeledtedDriverState extends ConsumerState<SeledtedDriver> {
                                     height: 5,
                                   ),
                                   Text(
-                                    '${widget.data.distance} m',
+                                    '${(widget.data.distance).toStringAsFixed(2)} m',
                                     style: GoogleFonts.inter(
                                       color: Colors.black,
                                       fontSize: 14,

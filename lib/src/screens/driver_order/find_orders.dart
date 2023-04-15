@@ -12,7 +12,12 @@ class FindOrders extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orderList = ref.watch(homeProvider).orders;
+    final orderList = ref
+        .watch(homeProvider)
+        .orders
+        .where((element) => element.orderDetails!.status != 'ENDED')
+        .toList();
+    final model = ref.read(orderRequestProvider.notifier);
 
     return Scaffold(
         body: Padding(
@@ -98,6 +103,22 @@ class FindOrders extends ConsumerWidget {
                             orderList[index].orderDetails!.orderToAddress,
                         image: orderList[index].customerDetails!.image,
                         status: orderList[index].orderDetails!.status,
+                        decline: () {
+                          model
+                              .cancelOrder(
+                                  context: context,
+                                  orderRef: orderList[index]
+                                      .orderDetails!
+                                      .orderReference)
+                              .then((value) => {
+                                    if (value == true)
+                                      {
+                                        ref
+                                            .read(homeProvider.notifier)
+                                            .getOrders()
+                                      }
+                                  });
+                        },
                         accept: () {
                           if (orderList[index].orderDetails!.status ==
                               'STARTED') {

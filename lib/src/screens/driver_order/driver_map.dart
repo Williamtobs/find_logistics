@@ -22,7 +22,8 @@ class _DriverMapState extends ConsumerState<DriverMap> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.watch(driverMapProvider.notifier).getDirections(
+      final model = ref.read(driverMapProvider.notifier);
+      model.getDirections(
           double.parse(widget.driverOrders.orderDetails!.orderFromLat),
           double.parse(widget.driverOrders.orderDetails!.orderFromLong),
           double.parse(widget.driverOrders.orderDetails!.orderToLat),
@@ -34,6 +35,7 @@ class _DriverMapState extends ConsumerState<DriverMap> {
   Widget build(BuildContext context) {
     final state = ref.watch(driverMapProvider);
     final model = ref.watch(driverMapProvider.notifier);
+    final endRide = ref.read(orderRequestProvider.notifier);
     final LatLng kMapCenter = LatLng(
         (double.parse(widget.driverOrders.orderDetails!.orderFromLat)),
         (double.parse(widget.driverOrders.orderDetails!.orderFromLong)));
@@ -283,24 +285,39 @@ class _DriverMapState extends ConsumerState<DriverMap> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  height: 47,
-                  width: 206,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                      color: const Color.fromRGBO(255, 255, 255, 1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color.fromRGBO(45, 95, 46, 1),
-                        width: 1,
-                      )),
-                  child: Center(
-                    child: Text('End Ride',
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: const Color.fromRGBO(45, 95, 46, 1))),
+                InkWell(
+                  onTap: () {
+                    endRide
+                        .cancelOrder(
+                            context: context,
+                            orderRef: widget
+                                .driverOrders.orderDetails!.orderReference)
+                        .then((value) => Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Home()),
+                              (route) => false,
+                            ));
+                  },
+                  child: Container(
+                    height: 47,
+                    width: 206,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(255, 255, 255, 1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: const Color.fromRGBO(45, 95, 46, 1),
+                          width: 1,
+                        )),
+                    child: Center(
+                      child: Text('End Ride',
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: const Color.fromRGBO(45, 95, 46, 1))),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
