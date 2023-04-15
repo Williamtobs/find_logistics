@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/driver_order/order_request.dart';
+import 'package:find_logistic/src/screens/driver_order/find_orders.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/setting.dart';
 import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart';
@@ -107,37 +107,46 @@ class _HomeState extends ConsumerState<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //OrderDispatch
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const OrderDispatch()));
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DriverOrderRequest()));
-                        },
-                        child: const Options(
-                          title: 'Order a Dispatch',
-                          img: 'assets/images/dispatch.png',
-                        ),
-                      ),
+                      state.user.userType == 'driver'
+                          ? InkWell(
+                              onTap: () {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => const OrderDispatch()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const FindOrders()));
+                              },
+                              child: const Options(
+                                title: 'Check Order',
+                                img: 'assets/images/dispatch.png',
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OrderDispatch()));
+                              },
+                              child: const Options(
+                                title: 'Order a Dispatch',
+                                img: 'assets/images/dispatch.png',
+                              ),
+                            ),
                       const SizedBox(
                         width: 50,
                       ),
                       InkWell(
                         onTap: () {
-                          _timer?.cancel();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const WalletScreen()));
-                          if (ref.watch(dashboardProvider).user.userType ==
-                              'driver') {
-                            initTimer();
-                          }
                         },
                         child: const Options(
                           title: 'Wallet',

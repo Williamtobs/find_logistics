@@ -24,7 +24,6 @@ class HomeViewModel extends StateNotifier<HomeState> {
   getOrders() async {
     final response = await network.get(path: 'order/check');
     var body = response.data;
-    print('here');
     print(body);
     if (response.statusCode == 200) {
       if (body['status'] == true) {

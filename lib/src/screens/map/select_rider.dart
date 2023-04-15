@@ -304,7 +304,9 @@ class EachDriver extends ConsumerWidget {
 }
 
 class DeclineButton extends StatelessWidget {
-  const DeclineButton({Key? key}) : super(key: key);
+  final double? size;
+  final String? text;
+  const DeclineButton({Key? key, this.size, this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +316,7 @@ class DeclineButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Container(
         height: 47,
-        width: 206,
+        width: size ?? 206,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: const Color.fromRGBO(255, 255, 255, 1),
@@ -322,7 +324,7 @@ class DeclineButton extends StatelessWidget {
         ),
         child: Center(
             child: Text(
-          'Decline',
+          text ?? 'Decline',
           style: GoogleFonts.inter(
             color: primaryColor,
             fontSize: 18,

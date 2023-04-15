@@ -3,25 +3,29 @@ import 'package:find_logistic/src/app/model/driver_orders_model.dart';
 import 'package:find_logistic/src/screens/auth/widgets/auth_background.dart';
 import 'package:find_logistic/src/screens/map/select_rider.dart';
 import 'package:find_logistic/src/screens/widgets/button.dart';
+import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DriverOrderRequest extends StatelessWidget {
-  //final DriverOrders driverOrders;
+class DriverOrderRequest extends ConsumerWidget {
+  final DriverOrders driverOrders;
   const DriverOrderRequest({
     super.key,
-    //required this.driverOrders,
+    required this.driverOrders,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(orderRequestProvider);
+    final model = ref.read(orderRequestProvider.notifier);
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 35),
             Align(
               alignment: Alignment.centerRight,
               child: Material(
@@ -81,7 +85,7 @@ class DriverOrderRequest extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           color: primaryColor)),
                   const SizedBox(height: 5),
-                  Text('John Doe',
+                  Text(driverOrders.orderDetails!.sendersName,
                       style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -100,7 +104,7 @@ class DriverOrderRequest extends StatelessWidget {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Text('080123456980',
+                      Text(driverOrders.orderDetails!.receiversPhone,
                           style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -149,7 +153,7 @@ class DriverOrderRequest extends StatelessWidget {
                         size: 16,
                       ),
                       const SizedBox(width: 15),
-                      Text('No 1, Ogunlana Drive, Surulere, Lagos',
+                      Text(driverOrders.orderDetails!.orderFromAddress,
                           style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -176,7 +180,7 @@ class DriverOrderRequest extends StatelessWidget {
                         size: 16,
                       ),
                       const SizedBox(width: 15),
-                      Text('No 1, Ogunlana Drive, Surulere, Lagos',
+                      Text(driverOrders.orderDetails!.orderToAddress,
                           style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -195,7 +199,7 @@ class DriverOrderRequest extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           color: primaryColor)),
                   const SizedBox(height: 5),
-                  Text('N 10,000',
+                  Text('N ${driverOrders.orderDetails!.estimatedAmount}',
                       style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -209,9 +213,15 @@ class DriverOrderRequest extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const CustomButton(
+            CustomButton(
               text: 'Accept',
               size: 200,
+              isLoading: state.isLoading,
+              onTap: () {
+                model.acceptRide(
+                    context: context,
+                    orderRef: driverOrders.orderDetails!.orderReference);
+              },
             ),
             const SizedBox(height: 10),
             const DeclineButton(),
