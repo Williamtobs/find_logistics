@@ -100,7 +100,8 @@ class SelectRider extends ConsumerWidget {
                     carName: riders[index].firstName,
                     driverName:
                         '${riders[index].firstName} ${riders[index].lastName}',
-                    price: riders[index].driversPrice,
+                    price: num.parse(riders[index].driversPrice)
+                        .toStringAsFixed(2),
                     orderRef: orderRef,
                     driverId: riders[index].id,
                     data: riders[index],
@@ -221,26 +222,26 @@ class EachDriver extends ConsumerWidget {
                           color: Colors.black,
                         )),
                     const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star_border_outlined,
-                          size: 20,
-                          color: Color.fromRGBO(45, 95, 46, 1),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '4.5 (117)',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     const Icon(
+                    //       Icons.star_border_outlined,
+                    //       size: 20,
+                    //       color: Color.fromRGBO(45, 95, 46, 1),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 5,
+                    //     ),
+                    //     Text(
+                    //       '4.5 (117)',
+                    //       style: GoogleFonts.inter(
+                    //         fontSize: 12,
+                    //         fontWeight: FontWeight.w500,
+                    //         color: Colors.black,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 const Spacer(),
