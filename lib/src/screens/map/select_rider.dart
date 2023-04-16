@@ -249,7 +249,7 @@ class EachDriver extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      price,
+                      'N $price',
                       style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
@@ -260,7 +260,7 @@ class EachDriver extends ConsumerWidget {
                       height: 5,
                     ),
                     Text(
-                      '${data.distance} m',
+                      '${data.distance.toStringAsFixed(2)} m',
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
