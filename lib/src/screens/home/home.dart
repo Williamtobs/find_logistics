@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:find_logistic/src/app/constant/color.dart';
+import 'package:find_logistic/src/screens/driver_order/find_orders.dart';
 import 'package:find_logistic/src/screens/home/screens/order/order_dispatch.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/setting.dart';
 import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart';
@@ -20,11 +23,36 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
+  Timer? _timer;
+  int _start = 15;
+
   @override
   void initState() {
     super.initState();
     ref.read(dashboardProvider.notifier).getProfile(context: context);
     ref.read(homeProvider.notifier).fetchRecentActivities();
+    initTimer();
+  }
+
+  initTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_start < 1) {
+          _start = 15;
+          if (ref.watch(dashboardProvider).user.userType == 'driver') {
+            ref.read(homeProvider.notifier).getOrders();
+          }
+        } else {
+          _start = _start - 1;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -79,18 +107,37 @@ class _HomeState extends ConsumerState<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //OrderDispatch
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const OrderDispatch()));
-                        },
-                        child: const Options(
-                          title: 'Order a Dispatch',
-                          img: 'assets/images/dispatch.png',
-                        ),
-                      ),
+                      state.user.userType == 'driver'
+                          ? InkWell(
+                              onTap: () {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => const OrderDispatch()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const FindOrders()));
+                              },
+                              child: const Options(
+                                title: 'Check Order',
+                                img: 'assets/images/dispatch.png',
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OrderDispatch()));
+                              },
+                              child: const Options(
+                                title: 'Order a Dispatch',
+                                img: 'assets/images/dispatch.png',
+                              ),
+                            ),
                       const SizedBox(
                         width: 50,
                       ),

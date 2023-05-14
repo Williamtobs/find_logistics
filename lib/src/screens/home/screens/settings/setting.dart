@@ -2,10 +2,13 @@ import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/change_password/change_password.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/profile/profile_sreecn.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'screens/percentage_negotiation/percentage_negotiation.dart';
 
 class Setting extends ConsumerStatefulWidget {
   const Setting({super.key});
@@ -18,8 +21,44 @@ class _SettingState extends ConsumerState<Setting> {
   bool isSwitched = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.watch(dashboardProvider).user.availability != null) {
+        setState(() {
+          isSwitched =
+              ref.watch(dashboardProvider).user.availability == 'online';
+        });
+      } else {
+        setState(() {
+          isSwitched = false;
+        });
+      }
+    });
+  }
+
+  updateAvailability() async {
+    final response = await ref.read(networkProvider).postWithToken(
+      path: 'availability',
+      formData: {
+        'availability': isSwitched ? 'online' : 'offline',
+      },
+    );
+    var body = response.data;
+    if (response.statusCode == 200) {
+      if (body['status'] == true) {
+        // ignore: use_build_context_synchronously
+        ref.watch(dashboardProvider.notifier).getProfile(context: context);
+        // ignore: use_build_context_synchronously
+        BottomSnack.successSnackBar(message: body['message'], context: context);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = ref.watch(dashboardProvider);
+
     return BaseScreen(
       title: 'Settings',
       child: Padding(
@@ -120,12 +159,29 @@ class _SettingState extends ConsumerState<Setting> {
                                 onChanged: (value) {
                                   setState(() {
                                     isSwitched = value;
+                                    updateAvailability();
                                   });
                                 },
                                 activeTrackColor: Colors.lightGreenAccent,
                                 activeColor: primaryColor,
                               ),
                             ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 20),
+                  user.user.userType == 'driver'
+                      ? InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PercentageNegotiation()));
+                          },
+                          child: const EachOption(
+                            icon: Icons.percent,
+                            title: 'Percentage Negotiation',
                           ),
                         )
                       : const SizedBox.shrink(),

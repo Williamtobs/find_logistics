@@ -39,21 +39,21 @@ class _SignUpScreenUserState extends ConsumerState<SignUpScreenUser> {
     final model = ref.read(registerProvider.notifier);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          onChanged: () {
-            _formKey.currentState!.save();
-            setState(() {
-              _formKey.currentState!.validate();
-            });
-          },
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+      body: Form(
+        key: _formKey,
+        onChanged: () {
+          _formKey.currentState!.save();
+          setState(() {
+            _formKey.currentState!.validate();
+          });
+        },
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 30),
                 SizedBox(
                   height: 120,
                   child: Stack(

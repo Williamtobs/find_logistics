@@ -58,8 +58,11 @@ class NetworkImpl implements Network {
       _deleteToken();
       BottomSnack.successSnackBar(
           message: 'Log out successfully', context: context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (Route<dynamic> route) => false,
+      );
     });
   }
 
