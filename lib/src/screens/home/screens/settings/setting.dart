@@ -1,6 +1,7 @@
 import 'package:find_logistic/src/app/constant/color.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/change_password/change_password.dart';
 import 'package:find_logistic/src/screens/home/screens/settings/screens/profile/profile_sreecn.dart';
+import 'package:find_logistic/src/screens/home/screens/settings/screens/terms_condition.dart';
 import 'package:find_logistic/src/screens/widgets/basescreen.dart';
 import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
@@ -125,9 +126,17 @@ class _SettingState extends ConsumerState<Setting> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const EachOption(
-                    icon: Icons.description_outlined,
-                    title: 'Terms and Conditions',
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const TermsAndCondition()));
+                    },
+                    child: const EachOption(
+                      icon: Icons.description_outlined,
+                      title: 'Terms and Conditions',
+                    ),
                   ),
                   const SizedBox(height: 20),
                   user.user.userType == 'driver'
