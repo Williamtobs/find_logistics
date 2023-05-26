@@ -42,7 +42,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
       child: InAppWebView(
         key: webViewKey,
         initialUrlRequest: URLRequest(
-          url: Uri.parse('https://findlogistic.com/terms-and-conditions'),
+          url: Uri.parse('https://findlogistics.ng/about-us'),
         ),
         initialOptions: options,
         onWebViewCreated: (controller) {

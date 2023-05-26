@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/model/user.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
@@ -49,16 +52,17 @@ class LoginViewModel extends StateNotifier<LoginState> {
       {required BuildContext context,
       required String email,
       required String password}) async {
-    var formData = {
+    var formData = ({
       'email': email,
       'password': password,
-    };
+    });
+    print(formData);
     state = state.copyWith(isLoading: true);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await network.post(formData: formData, path: 'signin');
       var body = response.data;
-      print(body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         prefs.setString('token', body['data']['token']['accessToken']);
         BottomSnack.successSnackBar(message: body['message'], context: context);
