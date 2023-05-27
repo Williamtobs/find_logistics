@@ -43,6 +43,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
       );
       var body = response.data;
       print(response.statusCode);
+
       if (response.statusCode == 200) {
         if (body['status'] == true) {
           setState(() {
@@ -63,9 +64,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
           isLoading = false;
         });
         // ignore: use_build_context_synchronously
-        BottomSnack.errorSnackBar(
-            message: 'Something went wrong, please try again later',
-            context: context);
+        BottomSnack.errorSnackBar(message: body['message'], context: context);
       }
       setState(() {
         isLoading = false;

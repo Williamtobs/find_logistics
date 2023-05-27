@@ -101,7 +101,7 @@ class _SettingState extends ConsumerState<Setting> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ChangePassword()));
+                              builder: (context) => const ChangePassword()));
                     },
                     child: const EachOption(
                       icon: Icons.lock_outline,

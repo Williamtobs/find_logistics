@@ -102,13 +102,14 @@ class NetworkImpl implements Network {
         fullUrl,
         data: FormData.fromMap(formData),
         options: Options(
+          validateStatus: (_) => true,
           headers: {
             "Authorization": "Bearer $token",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
         ),
       );
-      print(data.statusCode);
+      print(data);
       return data;
       // return BaseResponse(
       //   success: true,

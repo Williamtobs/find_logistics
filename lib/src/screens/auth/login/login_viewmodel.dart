@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:find_logistic/src/app/constant/app_string.dart';
 import 'package:find_logistic/src/app/model/user.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
 import 'package:find_logistic/src/screens/auth/customer/register/verify_email.dart';
