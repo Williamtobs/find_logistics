@@ -167,7 +167,7 @@ class EachDriver extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(mapProvider);
+    // final state = ref.watch(mapProvider);
     final model = ref.read(mapProvider.notifier);
     return Material(
       elevation: 5,

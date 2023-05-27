@@ -100,7 +100,7 @@ class NetworkImpl implements Network {
     try {
       final data = await _dio.post(
         fullUrl,
-        data: formData,
+        data: FormData.fromMap(formData),
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
@@ -108,6 +108,7 @@ class NetworkImpl implements Network {
           },
         ),
       );
+      print(data.statusCode);
       return data;
       // return BaseResponse(
       //   success: true,
