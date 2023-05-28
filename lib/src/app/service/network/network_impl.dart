@@ -70,14 +70,13 @@ class NetworkImpl implements Network {
   Future<Response> post(
       {required Map<String, dynamic> formData, required String path}) async {
     var fullUrl = "$url$path";
+    // _dio.options.headers["Content-Type"] = "application/json";
     final response = await _dio.post(
       fullUrl,
-      data: formData,
+      data: FormData.fromMap(formData),
       options: Options(
         validateStatus: (_) => true,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json", "Accept": "*/*"},
       ),
     );
     return response;
@@ -101,14 +100,16 @@ class NetworkImpl implements Network {
     try {
       final data = await _dio.post(
         fullUrl,
-        data: formData,
+        data: FormData.fromMap(formData),
         options: Options(
+          validateStatus: (_) => true,
           headers: {
             "Authorization": "Bearer $token",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
         ),
       );
+      print(data);
       return data;
       // return BaseResponse(
       //   success: true,

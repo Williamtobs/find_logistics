@@ -44,7 +44,10 @@ class WalletScreen extends ConsumerWidget {
                   child: const EachRow(
                       title: 'Transaction History', icon: Icons.history)),
               const SizedBox(height: 20),
-              const EachRow(title: 'Payment Settings', icon: Icons.credit_card),
+              state.user.userType == 'driver'
+                  ? const EachRow(
+                      title: 'Payment Settings', icon: Icons.credit_card)
+                  : const SizedBox.shrink(),
             ],
           ),
         ));

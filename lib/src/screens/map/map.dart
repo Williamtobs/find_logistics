@@ -70,7 +70,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final model = ref.read(pickUpProvider.notifier);
-    final state = ref.watch(orderProvider);
     final LatLng kMapCenter = LatLng(
         (model.pickUpDetailsResponse!.geometry!.location.lat),
         (model.pickUpDetailsResponse!.geometry!.location.lng));
@@ -364,7 +363,7 @@ class _SeledtedDriverState extends ConsumerState<SeledtedDriver> {
                           ),
                           Center(
                             child: SizedBox(
-                              width: 140,
+                              width: 180,
                               child: CustomButton(
                                 text: 'Cancel Ride',
                                 onTap: () {

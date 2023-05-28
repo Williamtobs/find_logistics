@@ -45,7 +45,7 @@ class OrderViewModel extends StateNotifier<OrderState> {
     final response =
         await network.postWithToken(path: 'initiate/order', formData: form);
     var body = response.data;
-    print(body);
+    print(body['data']['order']);
     if (response.statusCode == 200) {
       if (body['status'] == true) {
         state = state.copyWith(
