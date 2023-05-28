@@ -1,5 +1,4 @@
 import 'package:find_logistic/src/app/constant/color.dart';
-import 'package:find_logistic/src/screens/auth/forgot_password/reset_password.dart';
 import 'package:find_logistic/src/screens/widgets/app_button.dart';
 import 'package:find_logistic/src/screens/widgets/app_ftext_ield.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';

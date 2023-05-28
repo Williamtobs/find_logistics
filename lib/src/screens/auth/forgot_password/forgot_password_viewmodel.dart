@@ -23,7 +23,6 @@ class ForgotPasswordViewModel extends StateNotifier<ForgotPasswordState> {
       final response =
           await network.post(formData: formData, path: 'send/password/token');
       var body = response.data;
-      print(body);
       if (response.statusCode == 200) {
         state = state.copyWith(isLoading: false);
         BottomSnack.successSnackBar(message: body['message'], context: context);
@@ -54,7 +53,6 @@ class ForgotPasswordViewModel extends StateNotifier<ForgotPasswordState> {
       final response =
           await network.post(formData: formData, path: 'password/token');
       var body = response.data;
-      print(body);
       if (response.statusCode == 200) {
         state = state.copyWith(isLoading: false);
         BottomSnack.successSnackBar(message: body['message'], context: context);
@@ -87,7 +85,6 @@ class ForgotPasswordViewModel extends StateNotifier<ForgotPasswordState> {
       final response = await network.postWithToken(
           formData: formData, path: 'reset/password');
       var body = response.data;
-      print(body);
       if (response.statusCode == 200) {
         state = state.copyWith(isLoading: false);
         BottomSnack.successSnackBar(message: body['message'], context: context);
