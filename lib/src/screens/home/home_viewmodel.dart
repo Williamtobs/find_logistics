@@ -1,6 +1,7 @@
 import 'package:find_logistic/src/app/model/activities_model.dart';
 import 'package:find_logistic/src/app/model/driver_orders_model.dart';
 import 'package:find_logistic/src/app/service/network/network.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location_geocoder/geocoder.dart';
@@ -40,7 +41,8 @@ class HomeViewModel extends StateNotifier<HomeState> {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     Position? currentPosition;
-    if (permission == LocationPermission.always) {
+    if (permission != LocationPermission.denied ||
+        permission != LocationPermission.deniedForever) {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       currentPosition = position;
@@ -55,7 +57,9 @@ class HomeViewModel extends StateNotifier<HomeState> {
       var body = response.data;
       if (response.statusCode == 200) {
         if (body['status'] == true) {
-          print('$body Location Updated');
+          if (kDebugMode) {
+            print('$body Location Updated');
+          }
         }
       }
     }
