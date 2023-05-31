@@ -8,9 +8,11 @@ import 'package:find_logistic/src/screens/home/screens/wallet/wallet_screen.dart
 import 'package:find_logistic/src/screens/home/widgets/balance.dart';
 import 'package:find_logistic/src/screens/home/widgets/options.dart';
 import 'package:find_logistic/src/screens/tabs/history/history.dart';
+import 'package:find_logistic/src/screens/widgets/snack_bars.dart';
 import 'package:find_logistic/src/utils/app_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -30,6 +32,7 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     ref.read(dashboardProvider.notifier).getProfile(context: context);
+    _handleLocationPermission();
     ref.read(homeProvider.notifier).fetchRecentActivities();
     initTimer();
   }
@@ -41,12 +44,45 @@ class _HomeState extends ConsumerState<Home> {
           _start = 15;
           if (ref.watch(dashboardProvider).user.userType == 'driver') {
             ref.read(homeProvider.notifier).getOrders();
+            ref.read(homeProvider.notifier).updateDriverLocation();
           }
         } else {
           _start = _start - 1;
         }
       });
     });
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      BottomSnack.errorSnackBar(
+          message: 'Location services are disabled. Please enable the services',
+          context: context);
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        BottomSnack.errorSnackBar(
+            message:
+                'Location permissions are denied, activate location service',
+            context: context);
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      BottomSnack.errorSnackBar(
+          message:
+              'Location permissions are permanently denied, we cannot request permissions.',
+          context: context);
+      return false;
+    }
+    return true;
   }
 
   @override
