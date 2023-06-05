@@ -27,14 +27,13 @@ class PickUp extends ConsumerStatefulWidget {
 
 class _PickUpState extends ConsumerState<PickUp> {
   final TextEditingController _controller = TextEditingController();
-
   final TextEditingController _pickUpAddress = TextEditingController();
-
   final TextEditingController _pickUpNumber = TextEditingController();
-
   final TextEditingController _areaController = TextEditingController();
-
   final TextEditingController _landmarkController = TextEditingController();
+
+  int? dispatchDay;
+  int? paymentMethod;
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +41,23 @@ class _PickUpState extends ConsumerState<PickUp> {
     final model = ref.read(pickUpProvider.notifier);
     final state = ref.watch(orderProvider);
     final orderModel = ref.read(orderProvider.notifier);
+    final orderState = ref.watch(orderProvider);
 
     return BaseScreen(
-      title: 'Pickup',
+      title: 'Delivery Details',
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
               AuthBackground(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
-                    Text('Sender\'s Name',
+                    const SizedBox(height: 10),
+                    Text('Receiver\'s Name',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -66,10 +67,10 @@ class _PickUpState extends ConsumerState<PickUp> {
                     SharedField(
                       controller: _controller,
                       isPassword: false,
-                      hint: 'Enter sender\'s name',
+                      hint: '',
                     ),
                     const SizedBox(height: 15),
-                    Text('Pickup Phone Number',
+                    Text('Receiver\'s Phone Number',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -79,10 +80,10 @@ class _PickUpState extends ConsumerState<PickUp> {
                     SharedField(
                       controller: _pickUpNumber,
                       isPassword: false,
-                      hint: 'Enter pickup phone',
+                      hint: '',
                     ),
                     const SizedBox(height: 15),
-                    Text('Pickup Address',
+                    Text('Receiver\'s Address',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -104,23 +105,23 @@ class _PickUpState extends ConsumerState<PickUp> {
                       child: SharedField(
                         controller: _pickUpAddress,
                         isPassword: false,
-                        hint: 'Enter pickup address',
+                        hint: '',
                         enabled: false,
                       ),
                     ),
                     const SizedBox(height: 15),
-                    Text('Area',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: primaryColor,
-                        )),
-                    const SizedBox(height: 10),
-                    SharedField(
-                      controller: _areaController,
-                      isPassword: false,
-                    ),
-                    const SizedBox(height: 15),
+                    // Text('Area',
+                    //     style: GoogleFonts.inter(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 12,
+                    //       color: primaryColor,
+                    //     )),
+                    // const SizedBox(height: 10),
+                    // SharedField(
+                    //   controller: _areaController,
+                    //   isPassword: false,
+                    // ),
+                    // const SizedBox(height: 15),
                     Text('Closest Landmark',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
@@ -135,6 +136,101 @@ class _PickUpState extends ConsumerState<PickUp> {
                   ],
                 ),
               ),
+              const SizedBox(height: 20),
+              Text(
+                'Delivery Type',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: secondaryColor,
+                ),
+              ),
+              const SizedBox(height: 5),
+              orderState.deliveryMethod.isEmpty
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: orderState.deliveryMethod.map((e) {
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              dispatchDay = e.id;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                dispatchDay != e.id
+                                    ? Icons.radio_button_unchecked
+                                    : Icons.radio_button_checked,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                e.name,
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+              const SizedBox(
+                height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Payment details',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: secondaryColor,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              orderState.paymentsMethod.isEmpty
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: orderState.paymentsMethod.map((e) {
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              paymentMethod = e.id;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                paymentMethod != e.id
+                                    ? Icons.radio_button_unchecked
+                                    : Icons.radio_button_checked,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                e.name,
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
               const SizedBox(height: 40),
               Center(
                 child: CustomButton(
